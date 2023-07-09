@@ -1,0 +1,65 @@
+/* Färbt jede zweite Spalte, exkludiert Trenner */
+.data-row:nth-child(2n+1 of .data-row) {
+  background-color: rgb(248, 248, 248);
+}
+.data-row:nth-child(2n of .data-row) {
+  background-color: #fff;
+}
+.patliste-liste > .row:hover {
+  background-color: #e6e6e6;
+  cursor: pointer;
+}
+
+.row > .cell-2 {
+  overflow-x: hidden;
+  word-break: break-all;
+  hyphens: auto;
+}
+
+.patliste-liste > .row {
+  border-left: 1px solid #eee;
+  border-right: 1px solid #eee;
+}
+.patliste-liste > .row:last-child {
+  border-bottom: 1px solid #eee;
+}
+
+.patliste-liste > .divider-row:hover,
+.patliste-liste > .header-row:hover {
+  cursor: default;
+  background-color: initial;
+}
+
+.cell-permissions {
+  opacity: 0.4;
+}
+.cell-permissions > span {
+  border: 1px solid black;
+  border-radius: 3px;
+  padding: 2px;
+}
+
+.cell-permissions > span:hover {
+  cursor: help;
+}
+
+.cell-deactivation {
+  color: red;
+  opacity: 0.3;
+}
+
+.rkish-table > .data-row > .cell {
+  line-height: 42px;
+}
+.rkish-table > .data-row > .cell:first-child {
+  line-height: initial;
+}
+.rkish-table > .data-row > .cell.vert-center{
+  line-height: 42px;
+}
+
+@media print {
+  .rkish-table {page-break-after: always;}
+  .no-page-break {page-break-after: avoid;}
+  body {background-color: #fff;}
+}

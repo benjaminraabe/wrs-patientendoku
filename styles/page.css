@@ -1,0 +1,58 @@
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #f2f2f2;
+}
+.page-wrapper {
+  margin: 0 auto;
+  padding: 0;
+  max-width: 1000px;
+  /* min-width: 810px; */
+  min-height: 100vh;
+  position: relative;
+  background-color: #fff;
+  padding-bottom: 113px;
+}
+
+.wrs-background-image {
+  background-image: url("../images/background.png");
+  background-position: 50% 25%;
+  background-size: 90%;
+  background-repeat: no-repeat;
+}
+
+.scroll-wrapper {
+  overflow-y: scroll;
+}
+
+.login-wrapper {
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.error {
+  width: 90%;
+  margin: 0 auto;
+  background-color: #ffb580;
+  padding: 10px;
+  text-align: center;
+  border: 1px solid black;
+}
+
+.dialog {
+  overflow-y: auto;
+}
+
+a {
+  text-decoration: none;
+}
+@media print {
+  .no-print {
+    display: none;
+  }
+}
+@media screen {
+  .no-screen {
+    display: none;
+  }
+}
