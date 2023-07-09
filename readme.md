@@ -3,7 +3,7 @@
 
 Implementiert eine digitale Patientenverwaltung, diverse Statistiken/Reports, Monitore für die Unfallhilfsstellen und einige zusätzliche Verwaltungswerkzeuge.
 
-Die Software ist primär auf die Bedürfnisse des Wacken:Rescue:Service ausgelegt - es steht jedem frei, sie auf die Anforderungen anderer Veranstaltungen anzupassen.
+Die Software ist primär auf die Bedürfnisse des Wacken:Rescue:Squad ausgelegt - es steht jedem frei, sie auf die Anforderungen anderer Veranstaltungen anzupassen.
 
 
 
