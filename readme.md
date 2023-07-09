@@ -16,11 +16,7 @@ Ausgeschlossen davon ist die Verwendung des W:R:S-Logos (```images/background.pn
 
 Die Software wird mit den JS-Bibliotheken [MetroUI-CSS (MIT-Lizenz)](https://github.com/olton/Metro-UI-CSS), sowie [plotly.js (MIT-Lizenz)](https://github.com/plotly/plotly.js/) und [zxing-js (Apache 2.0 Lizenz)](https://github.com/zxing-js/library) ausgeliefert.
 
-
-
-## Acknowledgements
-
- - Projektmanagement durch Sebastian Rappmann.
+Projektmanagement durch Sebastian Rappmann.
 
 
 
@@ -48,6 +44,8 @@ Die Software wird mit den JS-Bibliotheken [MetroUI-CSS (MIT-Lizenz)](https://git
 ## "Hidden" Features
 
  - Personalisierte Links für Benutzer können erstellt werden, indem an die URL der Login-Seite der GET-Parameter ```&u=``` angehängt wird. Der übergebene Benutzername wird automatisch ausgewählt, so dass der User nur noch sein Passwort eingeben muss. Beispiel: ```../frontend/login.php?u=DemoAdmin``` wählt automatisch den Benutzer "DemoAdmin" aus.
+
+ - Dokumentation via GitHub-Wiki folgt.
 
 
 
