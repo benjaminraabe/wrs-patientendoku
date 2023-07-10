@@ -132,7 +132,7 @@ function openPzcSuche() {
   suchfeld.value = '';
   pzcSuche(suchfeld);
   Metro.dialog.open('#pzcDialog');
-  // suchfeld.focus();
+  suchfeld.focus();
 }
 
 function pzcSuche(searchinput) {

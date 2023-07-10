@@ -419,7 +419,7 @@
         <div class="dialog-title">
           <?php if(is_null($patientendaten["TRANSPORTKATEGORIE"])){echo "Transportanforderung";} else {echo "Entlassung an Rettungsmittel";} ?>
         </div>
-        <div class="dialog-content" style="overflow-y: auto; min-height: 400px;">
+        <div class="dialog-content" style="overflow-y: auto; min-height: 300px;">
           <div class="grid mb-4">
             <div class="row">
               <select id="form-transport-kategorie" data-role="select" data-prepend="Kategorie" <?php if (!is_null($patientendaten["TRANSPORTKATEGORIE"])){echo " disabled";} ?>>
@@ -448,7 +448,7 @@
               </select> -->
             </div>
             <div class="row mt-2 <?php if(is_null($patientendaten["TRANSPORTKATEGORIE"])){echo " hidden";} ?>">
-              <select id="form-transport-zielkh" data-role="select" data-prepend="Zielklinik" >
+              <select id="form-transport-zielkh" data-role="select" data-prepend="Zielklinik">
                 <option value=""></option>
                 <?php foreach ($kliniken as $klinik):?>
                   <option value="<?php echo $klinik["KLINIK_ID"];?>"><?php echo $klinik["KLINIK_NAME"];?></option>
