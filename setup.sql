@@ -14,11 +14,13 @@ CREATE TABLE `KLINIKEN` (
 ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 
+
 CREATE TABLE `MONITOR_STRINGS` (
   `UID` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Unique Identifier',
   `ITEM` varchar(500) NOT NULL COMMENT 'String der auf dem Durchlauf auf dem Einsatzmonitor angezeigt werde soll.',
   PRIMARY KEY (`UID`)
 ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
 
 
 CREATE TABLE `PZC_CATEGORIES` (
@@ -47,7 +49,7 @@ CREATE TABLE `BEREICHE` (
 
 
 CREATE TABLE `PATIENTEN` (
-  `PATIENTEN_ID` int(11) NOT NULL AUTO_INCREMENT COMMENT 'UID des Patienten.',
+  `PATIENTEN_ID` varchar(50) NOT NULL COMMENT 'UID des Patienten.',
   `BEREICH_ID` int(11) DEFAULT NULL COMMENT 'Optional: Bereich, dem der Pat. zugewiesen ist.',
   `AKTIV` tinyint(1) NOT NULL DEFAULT 1 COMMENT 'Wenn WAHR: Pat ist noch in der Behandlung. Sonst: Pat nur noch im Archiv.',
   `ZEIT_EINGANG` timestamp NOT NULL DEFAULT current_timestamp() COMMENT 'Zeit der ersten Erfassung des Patienten.',
@@ -76,28 +78,28 @@ CREATE TABLE `PATIENTEN` (
   KEY `PATIENTEN_FK_1` (`ZIELKLINIK`),
   CONSTRAINT `PATIENTEN_FK_1` FOREIGN KEY (`ZIELKLINIK`) REFERENCES `KLINIKEN` (`KLINIK_ID`),
   CONSTRAINT `patienten_FK` FOREIGN KEY (`BEREICH_ID`) REFERENCES `BEREICHE` (`BEREICH_ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 
 CREATE TABLE `PATIENTENVERLAUF` (
   `UID` int(11) NOT NULL AUTO_INCREMENT,
-  `PATIENTEN_ID` int(11) NOT NULL COMMENT 'ID eine Patienten. Referenziert Patienten.PATIENTEN_ID',
+  `PATIENTEN_ID` varchar(50) NOT NULL COMMENT 'ID eine Patienten. Referenziert Patienten.PATIENTEN_ID',
   `USERNAME` varchar(100) NOT NULL COMMENT 'Benutzer der den Eintrag vornimmt. Referenziert Benutzer.USERNAME',
   `TIMESTAMP` timestamp NOT NULL DEFAULT current_timestamp() COMMENT 'Zeit der Eintragung',
   `EINTRAG` varchar(1000) NOT NULL COMMENT 'Text / Anlass der Eintragung',
   PRIMARY KEY (`UID`),
   KEY `patientenverlauf_FK` (`PATIENTEN_ID`),
-  CONSTRAINT `patientenverlauf_FK` FOREIGN KEY (`PATIENTEN_ID`) REFERENCES `PATIENTEN` (`PATIENTEN_ID`)
+  CONSTRAINT `PATIENTENVERLAUF_FK` FOREIGN KEY (`PATIENTEN_ID`) REFERENCES `PATIENTEN` (`PATIENTEN_ID`)
 ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 
 CREATE TABLE `PROTOKOLL_VERKNUEPFUNGEN` (
   `UID` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Unique Identifier',
-  `SRC_PROTOKOLL` int(11) NOT NULL COMMENT 'Ursprungsprotokoll, in dem die Referenz erwähnt wurde.',
-  `ZIEL_PROTOKOLL` int(11) NOT NULL COMMENT 'Protokoll, welches referenziert wird. Kein Foreign-Key, da das Protokoll mglw. noch nicht existiert.',
+  `SRC_PROTOKOLL` varchar(50) NOT NULL COMMENT 'Ursprungsprotokoll, in dem die Referenz erwähnt wurde.',
+  `ZIEL_PROTOKOLL` varchar(50) NOT NULL COMMENT 'Protokoll, welches referenziert wird. Kein Foreign-Key, da das Protokoll mglw. noch nicht existiert.',
   PRIMARY KEY (`UID`),
-  KEY `PROTOKOLL_VERKNUEPFUNGEN_FK` (`SRC_PROTOKOLL`),
   KEY `PROTOKOLL_VERKNUEPFUNGEN_FK_1` (`ZIEL_PROTOKOLL`),
+  KEY `PROTOKOLL_VERKNUEPFUNGEN_FK` (`SRC_PROTOKOLL`),
   CONSTRAINT `PROTOKOLL_VERKNUEPFUNGEN_FK` FOREIGN KEY (`SRC_PROTOKOLL`) REFERENCES `PATIENTEN` (`PATIENTEN_ID`)
 ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
