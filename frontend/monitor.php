@@ -13,14 +13,18 @@
   include_once '../backend/db.php';
 
   // Alle bisher Transportierten Patienten (Hinterlegter Rufname)
-  $query = safeQuery($conn, "SELECT COUNT(PATIENTEN_ID) AS GES FROM PATIENTEN
-                              WHERE TRANSPORT_RUFNAME IS NOT NULL;");
+  $query = safeQuery($conn, "SELECT COUNT(PATIENTEN_ID) AS GES FROM PATIENTEN p
+                              LEFT JOIN BEREICHE b on p.BEREICH_ID = b.BEREICH_ID
+                              WHERE TRANSPORT_RUFNAME IS NOT NULL
+                              AND (b.UHST_ID = ? OR NULL <=> ?);", [$_SESSION['UHS'], $_SESSION['UHS']]);
   if (count($query) == 0) {$query = array(array("GES" => 0));}
   $transporte_gesamt = $query[0]["GES"];
 
   // Transportierte Patienten der letzten Schicht (Beginn letzte Schicht bis Beginn diese Schicht)
-  $query = safeQuery($conn, 'SELECT COUNT(PATIENTEN_ID) AS GES FROM PATIENTEN
+  $query = safeQuery($conn, 'SELECT COUNT(PATIENTEN_ID) AS GES FROM PATIENTEN p
+                              LEFT JOIN BEREICHE b on p.BEREICH_ID = b.BEREICH_ID
                               WHERE TRANSPORT_RUFNAME IS NOT NULL
+                              AND (b.UHST_ID = ? OR NULL <=> ?)
                               AND ZEIT_ENTLASSUNG >
                                 ADDTIME(IF(CURRENT_TIME() < "20:0:0",
                                 	IF(CURRENT_TIME() < "8:0:0",
@@ -32,31 +36,37 @@
                                 	IF(CURRENT_TIME() < "8:0:0",
                                 		(ADDTIME(DATE_SUB(CURRENT_DATE(), INTERVAL 1 DAY) , "20:0:0")),
                                 		(ADDTIME(CURRENT_DATE(), "8:0:0"))),
-                                	(ADDTIME(CURRENT_DATE(), "20:0:0")));');
+                                	(ADDTIME(CURRENT_DATE(), "20:0:0")));', [$_SESSION['UHS'], $_SESSION['UHS']]);
   if (count($query) == 0) {$query = array(array("GES" => 0));}
   $transporte_letzte_schicht = $query[0]["GES"];
 
   // Transportierte Patienten der aktuellen Schicht
-  $query = safeQuery($conn, 'SELECT COUNT(PATIENTEN_ID) AS GES FROM PATIENTEN
+  $query = safeQuery($conn, 'SELECT COUNT(PATIENTEN_ID) AS GES FROM PATIENTEN p
+                              LEFT JOIN BEREICHE b on p.BEREICH_ID = b.BEREICH_ID
                               WHERE TRANSPORT_RUFNAME IS NOT NULL
+                              AND (b.UHST_ID = ? OR NULL <=> ?)
                               AND ZEIT_ENTLASSUNG >
                                 IF(CURRENT_TIME() < "20:0:0",
                                 	IF(CURRENT_TIME() < "8:0:0",
                                 		(ADDTIME(DATE_SUB(CURRENT_DATE(), INTERVAL 1 DAY) , "20:0:0")),
                                 		(ADDTIME(CURRENT_DATE(), "8:0:0"))),
-                                	(ADDTIME(CURRENT_DATE(), "20:0:0")));');
+                                	(ADDTIME(CURRENT_DATE(), "20:0:0")));', [$_SESSION['UHS'], $_SESSION['UHS']]);
   if (count($query) == 0) {$query = array(array("GES" => 0));}
   $transporte_diese_schicht = $query[0]["GES"];
 
 
   // Gesamtzahl Patienten
-  $query = safeQuery($conn, "SELECT COUNT(PATIENTEN_ID) AS GES FROM PATIENTEN");
+  $query = safeQuery($conn, "SELECT COUNT(PATIENTEN_ID) AS GES FROM PATIENTEN p
+                              LEFT JOIN BEREICHE b on p.BEREICH_ID = b.BEREICH_ID
+                              WHERE (b.UHST_ID = ? OR NULL <=> ?)", [$_SESSION['UHS'], $_SESSION['UHS']]);
 if (count($query) == 0) {$query = array(array("GES" => 0));}
   $patienten_gesamt = $query[0]["GES"];
 
   // Transportierte Patienten der letzten Schicht (Beginn letzte Schicht bis Beginn diese Schicht)
-  $query = safeQuery($conn, 'SELECT COUNT(PATIENTEN_ID) AS GES FROM PATIENTEN
-                              WHERE ZEIT_EINGANG >
+  $query = safeQuery($conn, 'SELECT COUNT(PATIENTEN_ID) AS GES FROM PATIENTEN p
+                              LEFT JOIN BEREICHE b on p.BEREICH_ID = b.BEREICH_ID
+                              WHERE (b.UHST_ID = ? OR NULL <=> ?)
+                              AND ZEIT_EINGANG >
                                 ADDTIME(IF(CURRENT_TIME() < "20:0:0",
                                 	IF(CURRENT_TIME() < "8:0:0",
                                 		(ADDTIME(DATE_SUB(CURRENT_DATE(), INTERVAL 1 DAY) , "20:0:0")),
@@ -67,49 +77,64 @@ if (count($query) == 0) {$query = array(array("GES" => 0));}
                                 	IF(CURRENT_TIME() < "8:0:0",
                                 		(ADDTIME(DATE_SUB(CURRENT_DATE(), INTERVAL 1 DAY) , "20:0:0")),
                                 		(ADDTIME(CURRENT_DATE(), "8:0:0"))),
-                                	(ADDTIME(CURRENT_DATE(), "20:0:0")));');
+                                	(ADDTIME(CURRENT_DATE(), "20:0:0")));', [$_SESSION['UHS'], $_SESSION['UHS']]);
   if (count($query) == 0) {$query = array(array("GES" => 0));}
   $patienten_letzte_schicht = $query[0]["GES"];
 
   // Transportierte Patienten der aktuellen Schicht
-  $query = safeQuery($conn, 'SELECT COUNT(PATIENTEN_ID) AS GES FROM PATIENTEN
-                              WHERE ZEIT_EINGANG >
+  $query = safeQuery($conn, 'SELECT COUNT(PATIENTEN_ID) AS GES FROM PATIENTEN p
+                              LEFT JOIN BEREICHE b on p.BEREICH_ID = b.BEREICH_ID
+                              WHERE (b.UHST_ID = ? OR NULL <=> ?)
+                              AND ZEIT_EINGANG >
                                 IF(CURRENT_TIME() < "20:0:0",
                                 	IF(CURRENT_TIME() < "8:0:0",
                                 		(ADDTIME(DATE_SUB(CURRENT_DATE(), INTERVAL 1 DAY) , "20:0:0")),
                                 		(ADDTIME(CURRENT_DATE(), "8:0:0"))),
-                                	(ADDTIME(CURRENT_DATE(), "20:0:0")));');
+                                	(ADDTIME(CURRENT_DATE(), "20:0:0")));', [$_SESSION['UHS'], $_SESSION['UHS']]);
   if (count($query) == 0) {$query = array(array("GES" => 0));}
   $patienten_diese_schicht = $query[0]["GES"];
 
   // Aktuell aktive Patienten
-  $query = safeQuery($conn, "SELECT COUNT(PATIENTEN_ID) AS GES FROM PATIENTEN WHERE AKTIV = 1;");
+  $query = safeQuery($conn, "SELECT COUNT(PATIENTEN_ID) AS GES FROM PATIENTEN p
+                              LEFT JOIN BEREICHE b on p.BEREICH_ID = b.BEREICH_ID
+                              WHERE AKTIV = 1
+                              AND (b.UHST_ID = ? OR NULL <=> ?);", [$_SESSION['UHS'], $_SESSION['UHS']]);
   if (count($query) == 0) {$query = array(array("GES" => 0));}
   $aktive_patienten = $query[0]["GES"];
 
   // Auslastung nach SK
-  $query = safeQuery($conn, "SELECT COUNT(PATIENTEN_ID) AS GES FROM PATIENTEN
-                              WHERE AKTIV = 1 AND SICHTUNGSKATEGORIE = 'SOFORT';");
+  $query = safeQuery($conn, "SELECT COUNT(PATIENTEN_ID) AS GES FROM PATIENTEN p
+                              LEFT JOIN BEREICHE b on p.BEREICH_ID = b.BEREICH_ID
+                              WHERE AKTIV = 1 AND SICHTUNGSKATEGORIE = 'SOFORT'
+                              AND (b.UHST_ID = ? OR NULL <=> ?);", [$_SESSION['UHS'], $_SESSION['UHS']]);
   if (count($query) == 0) {$query = array(array("GES" => 0));}
   $aktive_rot = $query[0]["GES"];
 
-  $query = safeQuery($conn, "SELECT COUNT(PATIENTEN_ID) AS GES FROM PATIENTEN
-                              WHERE AKTIV = 1 AND SICHTUNGSKATEGORIE = 'SEHR DRINGEND';");
+  $query = safeQuery($conn, "SELECT COUNT(PATIENTEN_ID) AS GES FROM PATIENTEN p
+                              LEFT JOIN BEREICHE b on p.BEREICH_ID = b.BEREICH_ID
+                              WHERE AKTIV = 1 AND SICHTUNGSKATEGORIE = 'SEHR DRINGEND'
+                              AND (b.UHST_ID = ? OR NULL <=> ?);", [$_SESSION['UHS'], $_SESSION['UHS']]);
   if (count($query) == 0) {$query = array(array("GES" => 0));}
   $aktive_orange = $query[0]["GES"];
 
-  $query = safeQuery($conn, "SELECT COUNT(PATIENTEN_ID) AS GES FROM PATIENTEN
-                              WHERE AKTIV = 1 AND SICHTUNGSKATEGORIE = 'DRINGEND';");
+  $query = safeQuery($conn, "SELECT COUNT(PATIENTEN_ID) AS GES FROM PATIENTEN p
+                              LEFT JOIN BEREICHE b on p.BEREICH_ID = b.BEREICH_ID
+                              WHERE AKTIV = 1 AND SICHTUNGSKATEGORIE = 'DRINGEND'
+                              AND (b.UHST_ID = ? OR NULL <=> ?);", [$_SESSION['UHS'], $_SESSION['UHS']]);
   if (count($query) == 0) {$query = array(array("GES" => 0));}
   $aktive_gelb = $query[0]["GES"];
 
-  $query = safeQuery($conn, "SELECT COUNT(PATIENTEN_ID) AS GES FROM PATIENTEN
-                              WHERE AKTIV = 1 AND SICHTUNGSKATEGORIE = 'NORMAL';");
+  $query = safeQuery($conn, "SELECT COUNT(PATIENTEN_ID) AS GES FROM PATIENTEN p
+                              LEFT JOIN BEREICHE b on p.BEREICH_ID = b.BEREICH_ID
+                              WHERE AKTIV = 1 AND SICHTUNGSKATEGORIE = 'NORMAL'
+                              AND (b.UHST_ID = ? OR NULL <=> ?);", [$_SESSION['UHS'], $_SESSION['UHS']]);
   if (count($query) == 0) {$query = array(array("GES" => 0));}
   $aktive_gruen = $query[0]["GES"];
 
-  $query = safeQuery($conn, "SELECT COUNT(PATIENTEN_ID) AS GES FROM PATIENTEN
-                              WHERE AKTIV = 1 AND SICHTUNGSKATEGORIE = 'NICHT DRINGEND';");
+  $query = safeQuery($conn, "SELECT COUNT(PATIENTEN_ID) AS GES FROM PATIENTEN p
+                              LEFT JOIN BEREICHE b on p.BEREICH_ID = b.BEREICH_ID
+                              WHERE AKTIV = 1 AND SICHTUNGSKATEGORIE = 'NICHT DRINGEND'
+                              AND (b.UHST_ID = ? OR NULL <=> ?);", [$_SESSION['UHS'], $_SESSION['UHS']]);
   if (count($query) == 0) {$query = array(array("GES" => 0));}
   $aktive_blau = $query[0]["GES"];
 
