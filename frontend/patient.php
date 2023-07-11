@@ -29,8 +29,9 @@
     }
 
     // Patient mit Rückdatierter Eingangszeitstempel anlegen.
+    $eingangsdatetime = date("Y-m-d H:i:s", strtotime($_GET["nachtrEinDatum"] . " " . $_GET["nachtrEinZeit"]));
     safeExecute($conn, "INSERT INTO PATIENTEN(PATIENTEN_ID, ZEIT_EINGANG) VALUES(?, ?)",
-      [$pat_id, $_GET["nachtrEinDatum"] . " " . $_GET["nachtrEinZeit"]]);
+      [$pat_id, $eingangsdatetime]);
     safeExecute($conn, "INSERT INTO PATIENTENVERLAUF(PATIENTEN_ID, USERNAME, EINTRAG)
     VALUES(?, ?, ?)",
     [$pat_id, $_SESSION['USER_ID'], "Patient rückdatiert (".$_GET["nachtrEinDatum"] . " " . $_GET["nachtrEinZeit"].") Uhr erfasst."]);

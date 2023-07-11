@@ -36,6 +36,11 @@
   $postdata = json_decode(file_get_contents('php://input'), true);
 
   $patientendaten = $postdata["patient"];
+
+  if ($patientendaten["DOB"] != "") {
+    $dob = date("Y-m-d", strtotime($patientendaten["DOB"]));
+  }
+  $date_of_birth =
   $update_data = [
     $patientendaten["SICHTUNGSKATEGORIE"],
     $patientendaten["BEREICH_ID"],
@@ -47,7 +52,7 @@
     $patientendaten["STRASSE"],
     $patientendaten["HAUSNUMMER"],
     $patientendaten["BEMERKUNG"],
-    $patientendaten["DOB"],
+    $dob,
     $patientendaten["GESCHLECHT"],
     $patientendaten["INFEKT"],
     $patientendaten["EINGANGSART"],
