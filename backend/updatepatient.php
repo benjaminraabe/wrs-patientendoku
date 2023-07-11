@@ -19,11 +19,11 @@
           continue;
         }
         if ($oldData[$key] != $value) {
-          array_push($changes, " - [".$key."] " . $oldData[$key] . " => " . $value);
+          array_push($changes, "[".$key."] " . $oldData[$key] . " => " . $value);
         }
       }
     }
-    return implode("<br>", $changes);
+    return implode("   ", $changes);
   }
 
 
