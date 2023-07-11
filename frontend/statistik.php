@@ -113,6 +113,8 @@
     <div class="page-wrapper">
       <?php include_once '../modules/header.php'; ?>
 
+
+
       <!-- Patienten nach Abschnitt
            Initial aufgeführrt: BHP, Wackinger, RKISH, Infektion
       -->
@@ -173,6 +175,67 @@
           <?php if ($schicht == "Tagschicht") {$schicht = "Nachtschicht";} else {$schicht = "Tagschicht";} ?>
         <?php endforeach; ?>
       </div>
+
+
+
+      <!-- Nur Platztransporte-->
+      <h4 class="pr-5 pl-5">
+        Platztransporte / Patienten von W:R:S
+      </h4>
+      <div class="grid pr-5 pl-5 mb-8 patliste-liste rkish-table">
+        <div class="row header-row fg-light" style="background-color: #024ea4;">
+          <div class="cell text-center"></div>
+          <div class="cell text-center"><b>&Sigma;</b></div>
+          <div class="cell text-center"><b>Sofort</b></div>
+          <div class="cell text-center"><b>Sehr Dringend</b></div>
+          <div class="cell text-center"><b>Dringend</b></div>
+          <div class="cell text-center"><b>Normal</b></div>
+          <div class="cell text-center"><b>Nicht Dringend</b></div>
+        </div>
+        <!-- Gesamtanzahl Patienten nach Sichtungskategorie -->
+        <?php
+          $pat_sichtung_ges = safeQuery($conn, "SELECT COUNT(PATIENTEN_ID) AS ANZAHL, SICHTUNGSKATEGORIE
+                                                FROM PATIENTEN WHERE EINGANGSART = 2
+                                                GROUP BY SICHTUNGSKATEGORIE");
+          $pat_sichtung_ges = table_pivot_sk($pat_sichtung_ges);
+        ?>
+        <div class="row data-row">
+          <div class="cell text-center vert-center"><b>Gesamt</b></div>
+          <div class="cell text-center"><b><?php echo array_sum($pat_sichtung_ges); ?></b></div>
+          <?php foreach ($pat_sichtung_ges as $value): ?>
+            <div class="cell text-center"><b><?php echo $value; ?></b></div>
+          <?php endforeach; ?>
+        </div>
+
+
+        <?php foreach ($schicht_beginn_zeiten as $s_beginn) :?>
+          <?php
+            $schichtdaten = safeQuery($conn, "SELECT COUNT(PATIENTEN_ID) AS ANZAHL, SICHTUNGSKATEGORIE
+                                              FROM PATIENTEN
+                                              WHERE ZEIT_EINGANG >= ? AND ZEIT_EINGANG < ?
+                                              AND EINGANGSART = 2
+                                              GROUP BY SICHTUNGSKATEGORIE",
+                                              [date("Y-m-d H:i:s", $s_beginn), date("Y-m-d H:i:s", $s_beginn + (60*60*12))]);
+            $schichtdaten = table_pivot_sk($schichtdaten);
+           ?>
+
+          <?php if (array_sum($schichtdaten) > 0): ?>
+          <div class="row data-row">
+            <div class="cell text-center">
+              <?php echo date("d.m.Y", $s_beginn); ?> <br>
+              <?php echo $schicht; ?>
+            </div>
+            <div class="cell text-center"><?php echo array_sum($schichtdaten); ?></div>
+            <?php foreach ($schichtdaten as $value): ?>
+              <div class="cell text-center"><?php echo $value; ?></div>
+            <?php endforeach; ?>
+          </div>
+          <?php endif; ?>
+          <?php if ($schicht == "Tagschicht") {$schicht = "Nachtschicht";} else {$schicht = "Tagschicht";} ?>
+        <?php endforeach; ?>
+      </div>
+
+
 
       <!-- Patienten nach Abschnitt
            Initial aufgeführrt: BHP, Wackinger, RKISH, Isolation

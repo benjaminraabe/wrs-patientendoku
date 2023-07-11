@@ -25,7 +25,7 @@ Projektmanagement durch Sebastian Rappmann.
 **Vorraussetzungen**
 - Web-Server mit PHP 8.1 (Andere Versionen können funktionieren, getestet ist die Software aber nur mit PHP 8.1. Bei älteren Versionen kann es zu Problemen mit den Array-Funktionen ```explode(...)``` und ```implode(...)``` kommen.)
 
-- MySQL / MariaDB Datenbank (UTF-8, idealerweise utf8mb4)
+- MySQL / MariaDB Datenbank (UTF-8, idealerweise utf8mb4_general_ci)
 
 **Installation**
 - Repository in das Zielverzeichnis (Domain- oder Subdomain Root) des Webservers kopieren.
