@@ -194,7 +194,7 @@
   </head>
   <body>
 
-    <div class="page-wrapper">
+    <div class="page-wrapper" style="padding-top: 139px; min-width: 550px;">
       <?php include_once '../modules/patform_header.php'; ?>
       <?php if($patientendaten["AKTIV"] == "0") : ?>
       <div class="banner-korrektur mb-5">
@@ -251,9 +251,45 @@
         </div>
       </div>
 
+      <h4 class="pl-4 mt-8">Eingangsdaten</h4>
+      <div class="grid pl-4 pr-4 buttongroup">
+        <div class="row buttonwrapper mb-3">
+            <div class="cell">
+              <button type="button" class="js-eingangsart <?php if($patientendaten["EINGANGSART"] != 1 && $patientendaten["EINGANGSART"] != 2) {echo "active";} ?>" data-caption="Eingangsart" data-text="Unbekannt" data-value="0"></button>
+            </div>
+            <div class="cell">
+              <button type="button" class="js-eingangsart <?php if($patientendaten["EINGANGSART"] == 1) {echo "active";} ?>" data-caption="Eingangsart" data-text="UHS selbstständig aufgesucht" data-value="1"  ></button>
+            </div>
+            <div class="cell">
+              <button type="button" class="js-eingangsart <?php if($patientendaten["EINGANGSART"] == 2) {echo "active";} ?>" data-caption="Eingangsart" data-text="Zugeführt durch W:R:S" data-value="2"></button>
+            </div>
+        </div>
+        <div class="row textfieldwrapper" style="border-top: 1px solid black;">
+          <div id="form-Pzc" class="cell cell-3 field text-center" data-caption="PZC">
+            <input id="pzc-input" type="text" class="input" onfocus="document.activeElement.blur();openPzcSuche();" value="<?php echo $patientendaten["PZC"];?>" tabIndex="0">
+          </div>
+          <div  id="form-beschreibung-wrapper" class="cell field text-center" data-caption="Beschreibung" onclick="openPzcSuche();">
+            <span id="pzc-beschreibung">
+            <?php if (array_key_exists("DESCRIPTION", $patientendaten)) {echo $patientendaten["DESCRIPTION"];}?>
+            </span>
+          </div>
+        </div>
+        <div class="row textfieldwrapper">
+          <div class="cell field p-2" data-caption="Sonstige Eigenschaften">
+            <input id="cbInfekt" type="checkbox" data-role="checkbox" data-caption="Infektiös" <?php if($patientendaten["INFEKT"] == 1) {echo "checked";} ?>>
+            <input id="cbGewicht" type="checkbox" data-role="checkbox" data-caption="Adipös (>150kg)" <?php if($patientendaten["UEBERSCHWER"] == 1) {echo "checked";} ?>>
+          </div>
+        </div>
+        <div class="row">
+          <div class="cell field" data-caption="Verknüpfte Protokolle (Bestätigen mit Enter)">
+            <input id="eProtokollVerkn" type="text" data-role="taginput" data-tag-trigger="Enter" value="<?php echo implode(",", $linked_nrs); ?>">
+          </div>
+        </div>
+      </div>
+
       <!-- Patientendaten -->
       <h4 class="pl-4 mt-8">Patientendaten</h4>
-      <div class="grid pl-4 pr-4">
+      <div class="grid pl-4 pr-4 mt-8">
         <div class="row textfieldwrapper">
           <div id="form-Name" class="cell field" data-caption="Name">
             <input type="text" class="input" value="<?php echo $patientendaten["NAME"];?>">
@@ -287,47 +323,12 @@
             <input type="text" class="input" value="<?php echo $patientendaten["HAUSNUMMER"];?>">
           </div>
         </div>
-        <div class="row textfieldwrapper">
-          <div id="form-Pzc" class="cell cell-3 field text-center" data-caption="PZC">
-            <input id="pzc-input" type="text" class="input" onfocus="document.activeElement.blur();openPzcSuche();" value="<?php echo $patientendaten["PZC"];?>">
-          </div>
-          <div  id="form-beschreibung-wrapper" class="cell field text-center" data-caption="Beschreibung" onclick="openPzcSuche();">
-            <span id="pzc-beschreibung">
-            <?php if (array_key_exists("DESCRIPTION", $patientendaten)) {echo $patientendaten["DESCRIPTION"];}?>
-            </span>
-          </div>
-        </div>
       </div>
 
       <div class="grid pl-4 pr-4 mt-8">
         <div class="row textfieldwrapper">
           <div id="form-Bemerkung" class="cell field bigfield" data-caption="Bemerkung">
             <textarea><?php echo $patientendaten["BEMERKUNG"] ?></textarea>
-          </div>
-        </div>
-      </div>
-
-      <!-- Sonderauswahlen (ISO, Anreise, Verknüpfungen) -->
-      <h4 class="pl-4 mt-8">Zusatzdaten</h4>
-      <div class="grid pl-4 pr-4 mt-8">
-        <div class="row textfieldwrapper">
-          <div class="cell field p-2" data-caption="Sonstige Eigenschaften">
-            <input id="cbInfekt" type="checkbox" data-role="checkbox" data-caption="Infektiös" <?php if($patientendaten["INFEKT"] == 1) {echo "checked";} ?>>
-            <input id="cbGewicht" type="checkbox" data-role="checkbox" data-caption="Adipös (>150kg)" <?php if($patientendaten["UEBERSCHWER"] == 1) {echo "checked";} ?>>
-          </div>
-        </div>
-        <div class="row">
-          <div class="cell field pb-4" data-caption="Art des Patienteneingangs">
-            <fieldset>
-              <input type="radio" class="ePateingangart" data-role="radio" name="eVorst" data-caption="Unbekannt" value="0" <?php if($patientendaten["EINGANGSART"] != 1 && $patientendaten["EINGANGSART"] != 2) {echo "checked";} ?>>
-              <input type="radio" class="ePateingangart" data-role="radio" name="eVorst" data-caption="UHS selbstständig aufgesucht" value="1" <?php if($patientendaten["EINGANGSART"] == 1) {echo "checked";} ?>>
-              <input type="radio" class="ePateingangart" data-role="radio" name="eVorst" data-caption="Zugeführt durch WRS" value="2" <?php if($patientendaten["EINGANGSART"] == 2) {echo "checked";} ?>>
-            </fieldset>
-          </div>
-        </div>
-        <div class="row">
-          <div class="cell field" data-caption="Verknüpfte Protokolle (Bestätigen mit Enter)">
-            <input id="eProtokollVerkn" type="text" data-role="taginput" data-tag-trigger="Enter" value="<?php echo implode(",", $linked_nrs); ?>">
           </div>
         </div>
       </div>

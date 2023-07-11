@@ -42,12 +42,11 @@ function update_pat_data(patient_exit=false,
 
   // Art des Patienteneingangs wird abgefragt
   let eArt = 0;
-  for (let el of document.getElementsByName('eVorst')){
-      if(el.checked){
-          eArt = el.value;
-          break;
-      }
-  }
+  try {
+    eArt = document.getElementsByClassName('js-eingangsart active')[0].dataset.value;
+  } catch (e) {console.log("Eingangsart konnte nicht ausgelesen werden.");}
+
+
 
   // Construct the request-data
   let data = {

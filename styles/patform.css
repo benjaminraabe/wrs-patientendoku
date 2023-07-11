@@ -207,6 +207,10 @@
   background-color: rgba(0, 0, 255, 0.1)
 }
 
+.eingang-button {
+  /* line-height: 45px !important; */
+}
+
 /* Korrekturzugang */
 .banner-korrektur {
   width: 90%;

@@ -32,15 +32,18 @@
 
   <style>
     .page-header {
-      /* position: fixed;
+      position: fixed !important;
+      background-color: #fff;
       top: 0;
-      left: 0; */
       width: 100%;
-      margin: 0;
+      max-width: 1000px;
+      min-width: 550px;
+      margin: 0 auto;
       box-sizing: border-box;
       margin-bottom: 30px;
       position: relative;
       border-bottom: 1px solid lightgray;
+      z-index: 100;
     }
     .page-header-title {
       font-size: 2em;
