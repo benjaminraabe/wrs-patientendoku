@@ -51,6 +51,11 @@
     }
     exit();
   } else {
+    $user_ip = "Unknown.";
+    try {
+      $user_ip = $_SERVER['REMOTE_ADDR'];
+    } catch (\Exception $e) {}
+    error_log("[LOGIN-ERROR] Fehlgeschlagener Login (".$username.") von der IP: ".$user_ip);
     header('Location: ../frontend/login.php?errmsg=pwwrong');
     exit();
   }
