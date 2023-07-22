@@ -195,7 +195,7 @@
   </head>
   <body>
 
-    <div class="page-wrapper" style="padding-top: 139px; min-width: 550px;">
+    <div class="page-wrapper" style="padding-top: 190px; min-width: 550px;">
       <?php include_once '../modules/patform_header.php'; ?>
       <?php if($patientendaten["AKTIV"] == "0") : ?>
       <div class="banner-korrektur mb-5">
