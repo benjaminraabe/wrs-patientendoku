@@ -240,52 +240,55 @@
       <!-- Patienten nach Abschnitt
            Initial aufgeführrt: BHP, Wackinger, RKISH, Isolation
       -->
+      <?php
+        $uhsen = safeQuery($conn, "SELECT * FROM UHS_DEFINITION");
+       ?>
       <h4 class="pr-5 pl-5">Patienten nach Abschnitt</h4>
       <div class="grid pr-5 pl-5 mb-8 patliste-liste rkish-table">
         <div class="row header-row fg-light" style="background-color: #024ea4;">
           <div class="cell text-center"></div>
-          <div class="cell text-center"><b>BHP</b></div>
-          <div class="cell text-center"><b>Wackinger</b></div>
-          <div class="cell text-center"><b>RKISH</b></div>
           <div class="cell text-center"><b>Infektion</b></div>
+          <?php foreach ($uhsen as $uhs): ?>
+            <div class="cell text-center"><b>
+              <?php echo $uhs["NAME"]; ?>
+            </b></div>
+          <?php endforeach; ?>
         </div>
+
         <?php
-          $pat_uhs_gesamt = safeQuery($conn, "SELECT
-	           (SELECT COUNT(PATIENTEN_ID) FROM PATIENTEN p
-                LEFT JOIN BEREICHE b on p.BEREICH_ID = b.BEREICH_ID WHERE UHST_ID = 1) AS BHP,
-	           (SELECT COUNT(PATIENTEN_ID) FROM PATIENTEN p
-                LEFT JOIN BEREICHE b on p.BEREICH_ID = b.BEREICH_ID WHERE UHST_ID = 2) AS WACKINGER,
-	           (SELECT COUNT(PATIENTEN_ID) FROM PATIENTEN p
-                LEFT JOIN BEREICHE b on p.BEREICH_ID = b.BEREICH_ID WHERE UHST_ID = 3) AS RKISH,
-	           (SELECT COUNT(PATIENTEN_ID) FROM PATIENTEN p WHERE INFEKT = 1) AS INFEKT;");
+          // Gesamtübersicht
+          $query_ges_uhs = "SELECT COUNT(PATIENTEN_ID) AS CT FROM PATIENTEN p
+                        LEFT JOIN BEREICHE b on p.BEREICH_ID = b.BEREICH_ID
+                        WHERE UHST_ID = ?;";
+          $query_ges_infekt = "SELECT COUNT(PATIENTEN_ID) AS CT FROM PATIENTEN p WHERE INFEKT = 1;";
+
+          // Einzelne Schichten
+          $query_uhs = "SELECT COUNT(PATIENTEN_ID) AS CT FROM PATIENTEN p
+                        LEFT JOIN BEREICHE b on p.BEREICH_ID = b.BEREICH_ID
+                        WHERE UHST_ID = ? AND ZEIT_EINGANG >= ? AND ZEIT_EINGANG < ?;";
+          $query_infekt = "SELECT COUNT(PATIENTEN_ID) AS CT FROM PATIENTEN p
+                            WHERE INFEKT = 1 AND ZEIT_EINGANG >= ? AND ZEIT_EINGANG < ?;";
          ?>
         <div class="row data-row">
           <div class="cell text-center vert-center"><b>Gesamt</b></div>
-          <div class="cell text-center"><b><?php echo $pat_uhs_gesamt[0]["BHP"]; ?></b></div>
-          <div class="cell text-center"><b><?php echo $pat_uhs_gesamt[0]["WACKINGER"]; ?></b></div>
-          <div class="cell text-center"><b><?php echo $pat_uhs_gesamt[0]["RKISH"]; ?></b></div>
-          <div class="cell text-center"><b><?php echo $pat_uhs_gesamt[0]["INFEKT"]; ?></b></div>
+          <div class="cell text-center"><b><?php echo safeQuery($conn, $query_ges_infekt)[0]["CT"]; ?></b></div>
+          <?php foreach ($uhsen as $uhs): ?>
+            <div class="cell text-center"><b>
+              <?php echo safeQuery($conn, $query_ges_uhs, [$uhs["UHST_ID"]])[0]["CT"]; ?>
+            </b></div>
+          <?php endforeach; ?>
         </div>
         <!-- Patienten nach Abschnitten nach Schichten abfragen -->
         <?php foreach ($schicht_beginn_zeiten as $s_beginn) :?>
           <?php
-            $schichtdaten = safeQuery($conn, "SELECT
-	             (SELECT COUNT(PATIENTEN_ID) FROM PATIENTEN p
-                  LEFT JOIN BEREICHE b on p.BEREICH_ID = b.BEREICH_ID
-                  WHERE UHST_ID = 1 AND ZEIT_EINGANG >= ? AND ZEIT_EINGANG < ?) AS BHP,
-	             (SELECT COUNT(PATIENTEN_ID) FROM PATIENTEN p
-                  LEFT JOIN BEREICHE b on p.BEREICH_ID = b.BEREICH_ID
-                  WHERE UHST_ID = 2 AND ZEIT_EINGANG >= ? AND ZEIT_EINGANG < ?) AS WACKINGER,
-	             (SELECT COUNT(PATIENTEN_ID) FROM PATIENTEN p
-                  LEFT JOIN BEREICHE b on p.BEREICH_ID = b.BEREICH_ID
-                  WHERE UHST_ID = 3 AND ZEIT_EINGANG >= ? AND ZEIT_EINGANG < ?) AS RKISH,
-	             (SELECT COUNT(PATIENTEN_ID) FROM PATIENTEN p
-                  WHERE INFEKT = 1 AND ZEIT_EINGANG >= ? AND ZEIT_EINGANG < ?) AS INFEKT;",
-                [date("Y-m-d H:i:s", $s_beginn), date("Y-m-d H:i:s", $s_beginn + (60*60*12)),
-                 date("Y-m-d H:i:s", $s_beginn), date("Y-m-d H:i:s", $s_beginn + (60*60*12)),
-                 date("Y-m-d H:i:s", $s_beginn), date("Y-m-d H:i:s", $s_beginn + (60*60*12)),
-                 date("Y-m-d H:i:s", $s_beginn), date("Y-m-d H:i:s", $s_beginn + (60*60*12))]);
-            $schichtdaten = $schichtdaten[0];
+            $schichtdaten = [];
+            array_push($schichtdaten, safeQuery($conn, $query_infekt,
+                      [date("Y-m-d H:i:s", $s_beginn), date("Y-m-d H:i:s", $s_beginn + (60*60*12))])[0]["CT"]);
+
+            foreach ($uhsen as $uhs) {
+              array_push($schichtdaten, safeQuery($conn, $query_uhs,
+                        [$uhs["UHST_ID"], date("Y-m-d H:i:s", $s_beginn), date("Y-m-d H:i:s", $s_beginn + (60*60*12))])[0]["CT"]);
+            }
            ?>
 
           <?php if (array_sum($schichtdaten) > 0): ?>
@@ -294,10 +297,9 @@
               <?php echo date("d.m.Y", $s_beginn); ?> <br>
               <?php echo $schicht; ?>
             </div>
-            <div class="cell text-center"><?php echo $schichtdaten["BHP"]; ?></div>
-            <div class="cell text-center"><?php echo $schichtdaten["WACKINGER"]; ?></div>
-            <div class="cell text-center"><?php echo $schichtdaten["RKISH"]; ?></div>
-            <div class="cell text-center"><?php echo $schichtdaten["INFEKT"]; ?></div>
+            <?php foreach ($schichtdaten as $wert): ?>
+              <div class="cell text-center"><?php echo $wert; ?></div>
+            <?php endforeach; ?>
           </div>
           <?php endif; ?>
           <?php if ($schicht == "Tagschicht") {$schicht = "Nachtschicht";} else {$schicht = "Tagschicht";} ?>
