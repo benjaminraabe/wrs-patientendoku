@@ -99,16 +99,14 @@
 
   try {
     if ($late_edit) {
-      // Änderungen an archivierten Datensätzen werden nur noch im Verlauf vorgenommen
+      // Änderungen an archivierten Datensätzen werden zusätzlich im Verlauf vermerkt
       safeExecute($conn, "INSERT INTO PATIENTENVERLAUF(PATIENTEN_ID, USERNAME, EINTRAG)
-                          VALUES(?, ?, CONCAT(\"<span style='color: red;'>Nachtragung:</span><br>\", ?));",
+                          VALUES(?, ?, CONCAT(\"<span style='color: red;'>Korrektur nach Entlassung:</span><br>\", ?));",
                           [$patientendaten["PATIENTEN_ID"],
                            $_SESSION['USER_ID'],
                            inputDiff($oldDaten, $patientendaten)
                           ]);
     } else {
-      // Patientendaten aktualisieren
-      safeExecute($conn, $updatesql, $update_data);
       // Änderung im Verlauf vermerken
       safeExecute($conn, "INSERT INTO PATIENTENVERLAUF(PATIENTEN_ID, USERNAME, EINTRAG)
                           VALUES(?, ?, CONCAT('Patientendaten wurden bearbeitet:<br>', ?));",
@@ -117,6 +115,9 @@
                            inputDiff($oldDaten, $patientendaten)
                           ]);
     }
+    // Patientendaten aktualisieren
+    safeExecute($conn, $updatesql, $update_data);
+
   } catch (\Exception $e) {
     echo "Error: Beim Speichern der Patientendaten ist ein Fehler aufgetreten. Bitte überprüfen Sie den Datenstand auf der Patientenseite. ".$e;
     exit();
@@ -207,6 +208,5 @@
   }
 
   echo "Einfügen erfolgreich!";
-
 
  ?>

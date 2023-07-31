@@ -200,7 +200,7 @@
       <?php if($patientendaten["AKTIV"] == "0") : ?>
       <div class="banner-korrektur mb-5">
         Der Patient ist bereits entlassen worden. <br>
-        Änderungen werden im Verlauf dokumentiert, aber nicht in den Patientendaten angepasst.
+        Änderungen werden im Verlauf markiert.
       </div>
       <?php endif; ?>
         <!-- Sichtungskategorien -->
