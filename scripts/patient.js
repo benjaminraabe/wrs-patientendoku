@@ -1,6 +1,7 @@
 function update_pat_data(patient_exit=false,
                          patient_transport_requested=false,
-                         patient_hand_over=false) {
+                         patient_hand_over=false,
+                         patient_time_edit=false) {
   displayLoadingScreen(true);
 
   let pat_id = (new URLSearchParams(window.location.search)).get("id")
@@ -46,6 +47,12 @@ function update_pat_data(patient_exit=false,
     eArt = document.getElementsByClassName('js-eingangsart active')[0].dataset.value;
   } catch (e) {console.log("Eingangsart konnte nicht ausgelesen werden.");}
 
+  // Eventuelle Veränderungen an Ein- und Ausgangszeit werden abgefragt
+  let newDateIn = document.getElementById('frmEinDatum').value;
+  let newTimeIn = document.getElementById('frmEinZeit').value;
+  let newDateOut = document.getElementById('frmAusDatum').value;
+  let newTimeOut = document.getElementById('frmAusZeit').value;
+
 
 
   // Construct the request-data
@@ -78,6 +85,10 @@ function update_pat_data(patient_exit=false,
   if (patient_hand_over) {
     data["TRANSPORT_RUFNAME"] = transportCallsign
     data["TRANSPORT_ZIELKLINIK"] = transportZiel
+  }
+  if (patient_time_edit) {
+    data["EINGANG_TIMESTAMP"] = newDateIn + ' ' + newTimeIn
+    data["AUSGANG_TIMESTAMP"] = newDateOut + ' ' + newTimeOut
   }
 
   // console.log(data);
@@ -240,4 +251,9 @@ function displayLoadingScreen(state) {
   } else {
     document.getElementById('patform-loader').style.display = "none";
   }
+}
+
+
+function openTimeEditDlg() {
+  Metro.dialog.open('#dlgTimeEdit');
 }

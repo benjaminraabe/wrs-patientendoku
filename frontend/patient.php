@@ -288,6 +288,13 @@
         </div>
       </div>
 
+      <!-- Zeiten nachtragen -->
+      <?php if (($patientendaten["AKTIV"] == 0) && ($_SESSION["CAN_BACKDATE_PROTOCOL"] == 1 || $_SESSION["CAN_LATE_EDIT"] == 1)): ?>
+        <div class="pl-4 pr-4 mt-3">
+          <button class="button alert outline" onclick="openTimeEditDlg();">Zeiten editieren</button>
+        </div>
+      <?php endif; ?>
+
       <!-- Patientendaten -->
       <h4 class="pl-4 mt-8">Patientendaten</h4>
       <div class="grid pl-4 pr-4 mt-8">
@@ -486,6 +493,63 @@
               <button class="button w-100 js-dialog-close">Abbrechen</button>
           </div>
         <?php endif; ?>
+      </div>
+    </div>
+
+
+    <!-- Nachtragezugang Zeiten/Daten -->
+    <?php
+      $zeit_daten = safeQuery($conn, "SELECT DATE(ZEIT_EINGANG) AS EINDATUM, TIME(ZEIT_EINGANG) AS EINZEIT,
+                                      DATE(ZEIT_ENTLASSUNG) AS AUSDATUM, TIME(ZEIT_ENTLASSUNG) AS AUSZEIT
+                                      FROM PATIENTEN p
+                                      WHERE PATIENTEN_ID = ?;", [$pat_id]);
+    ?>
+    <div class="dialog" data-role="dialog" id="dlgTimeEdit">
+      <div class="dialog-title">Zeiten editieren</div>
+      <div class="dialog-content" style="overflow-y: scroll;">
+        <div class="grid">
+          <div class="row">
+            <div class="cell">
+              Eingangsdatum:
+            </div>
+            <div class="cell">
+              <input type="date" id="frmEinDatum" data-role="input" data-clear-button="false"
+                value="<?php echo $zeit_daten[0]["EINDATUM"]; ?>">
+            </div>
+          </div>
+          <div class="row">
+            <div class="cell">
+              Eingangszeit:
+            </div>
+            <div class="cell">
+              <input type="time" id="frmEinZeit" data-role="input" data-clear-button="false"
+                value="<?php echo $zeit_daten[0]["EINZEIT"]; ?>">
+            </div>
+          </div>
+          <hr>
+          <div class="row pt-4" style="border-top: 1px solid lightgray;">
+            <div class="cell">
+              Ausgangsdatum:
+            </div>
+            <div class="cell">
+              <input type="date" id="frmAusZeit" data-role="input" data-clear-button="false"
+                value="<?php echo $zeit_daten[0]["AUSDATUM"]; ?>">
+            </div>
+          </div>
+          <div class="row">
+            <div class="cell">
+              Ausgangszeit:
+            </div>
+            <div class="cell">
+              <input type="time" id="frmAusDatum" data-role="input" data-clear-button="false"
+                value="<?php echo $zeit_daten[0]["AUSZEIT"]; ?>">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="dialog-actions pr-6">
+          <button class="button success w-100 mb-2" onclick="update_pat_data(false, false, false, true)">Speichern</button>
+          <button class="button w-100 js-dialog-close">Abbrechen</button>
       </div>
     </div>
 
