@@ -65,6 +65,8 @@
             <span class="caption">Transporte</span>
             <span class="mif-ambulance icon"></span>
           </a>
+        <?php endif; ?>
+        <?php if (in_array($_SESSION["USER_ROLE"], array("ADMIN", "TEL", "SICHTER"), true)): ?>
           <a class="shortcut primary outline" href="offeneTransporte.php">
             <span class="caption">Anforderung</span>
             <span class="mif-chat icon"></span>

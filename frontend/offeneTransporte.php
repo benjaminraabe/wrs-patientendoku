@@ -1,7 +1,7 @@
 <?php
   include_once '../backend/sessionmanagement.php';
 
-  $accessible_to = array("ADMIN", "TEL"); // Whitelist für Benutzerrollen.
+  $accessible_to = array("ADMIN", "TEL", "SICHTER"); // Whitelist für Benutzerrollen.
 
   if (!in_array($_SESSION["USER_ROLE"], $accessible_to, true)) { // Aktiver strict-mode!
     echo "Zugriff verweigert.";
@@ -33,7 +33,8 @@
                                   	ON p.PATIENTEN_ID = af.PATIENTEN_ID
                                   WHERE TRANSPORTKATEGORIE IS NOT NULL
                                   	AND ZEIT_ENTLASSUNG IS NULL
-                                  ORDER BY UHSNAME ASC, af.`TIMESTAMP` ASC;");
+                                    AND ((b.UHST_ID = ? OR NULL <=> ?) OR p.BEREICH_ID IS NULL)
+                                  ORDER BY UHSNAME ASC, af.`TIMESTAMP` ASC;",[$_SESSION['UHS'], $_SESSION['UHS']]);
  ?>
 
 <?php
@@ -94,7 +95,7 @@
               </div>
             <?php endif; ?>
 
-            <div class="row data-row">
+            <div class="row data-row" onclick="window.location.href = 'patient.php?id=<?php echo $transport["PATIENTEN_ID"] ?>'">
               <div class="cell-2 text-center" lang="de" style="line-height: 60px;">
                 <?php echo $transport["PATIENTEN_ID"]; ?>
               </div>
