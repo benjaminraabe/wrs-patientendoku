@@ -45,7 +45,7 @@
   }
 
   function dayNumberToDayShort($day) {
-    $days = ["Mo.","Di.","Mi.","Do.","Fr.","Sa.","So."];
+    $days = ["So.","Mo.","Di.","Mi.","Do.","Fr.","Sa."];
     return $days[$day];
   }
 
