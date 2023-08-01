@@ -65,6 +65,10 @@
             <span class="caption">Transporte</span>
             <span class="mif-ambulance icon"></span>
           </a>
+          <a class="shortcut primary outline" href="offeneTransporte.php">
+            <span class="caption">Anforderung</span>
+            <span class="mif-chat icon"></span>
+          </a>
         <?php endif; ?>
       </div>
 
