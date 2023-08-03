@@ -35,6 +35,18 @@
                                   	AND ZEIT_ENTLASSUNG IS NULL
                                     AND ((b.UHST_ID = ? OR NULL <=> ?) OR p.BEREICH_ID IS NULL)
                                   ORDER BY UHSNAME ASC, af.`TIMESTAMP` ASC;",[$_SESSION['UHS'], $_SESSION['UHS']]);
+
+  // Halte den Zeitpunkt der Datenabfrage fest.
+  $data_timestamp = time();
+
+  // Findet den Unix-Epock-Zeitstempel der neusten Transportanforderung.
+  $newest_transport = 0;
+  foreach ($transporte as $t) {
+    $ts = strtotime($t["TIMESTAMP"]);
+    if ($ts > $newest_transport) {
+      $newest_transport = $ts;
+    }
+  }
  ?>
 
 <?php
@@ -130,7 +142,22 @@
     </div>
 
     <script type="text/javascript">
-      setTimeout(() => {window.location.reload()}, 10000);
+      setTimeout(() => {
+        localStorage.setItem("lastUpdateTime", <?php echo $data_timestamp; ?>)
+        window.location.reload()
+      }, 10000);
+
+      let lastUpdateTime = localStorage.getItem("lastUpdateTime")
+      // Fenster wurde noch nie geöffnet, kein Ton.
+      if (!lastUpdateTime) {}
+      else {
+        // Spielt einen Ton, wenn seit der letzten Aktualisierung ein neuer Transport angefordert wurde.
+        if (<?php echo $newest_transport;  ?> > lastUpdateTime) {
+          new Audio('../mif/sound.mp3').play()
+        }
+      }
+
+
     </script>
   </body>
 </html>
