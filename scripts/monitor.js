@@ -3,8 +3,7 @@ function page_header_updateTime(){
   let dt = new Date()
   let hrs = (dt.getHours() < 10) ? '0'+dt.getHours() : dt.getHours()
   let mins = (dt.getMinutes() < 10) ? '0'+dt.getMinutes() : dt.getMinutes()
-  let new_time = hrs + ':' + mins
-  document.getElementById('page-timedisplay').textContent = new_time
+  document.getElementById('page-timedisplay').textContent = hrs + ':' + mins
 }
 
 // Eine klassische 2D-Matrix-Rotation für beliebige Punkte
@@ -33,7 +32,7 @@ function rotateArrow(degrees) {
   ]
 
   let ps = points.map(p => pointRotate(p[0], p[1], theta)).map(p => [p[0].toFixed(3), p[1].toFixed(3)])
-  return path = `M ${ps[0][0]} ${ps[0][1]} L ${ps[1][0]} ${ps[1][1]} L ${ps[2][0]} ${ps[2][1]} L ${ps[3][0]} ${ps[3][1]} Z`
+  return `M ${ps[0][0]} ${ps[0][1]} L ${ps[1][0]} ${ps[1][1]} L ${ps[2][0]} ${ps[2][1]} L ${ps[3][0]} ${ps[3][1]} Z`
 }
 
 // Die Bereiche des Tachos umfassen unterschiedlich viele Patienten.

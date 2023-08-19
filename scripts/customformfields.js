@@ -4,7 +4,7 @@ function selectButton(button, buttonGroupClass) {
   for (let group of groupWrapper) {
     // Get all buttons in all wrappers
     let buttons = group.getElementsByTagName('button')
-    for (var btn of buttons) {
+    for (let btn of buttons) {
       btn.classList.remove("active")
     }
   }
@@ -12,7 +12,7 @@ function selectButton(button, buttonGroupClass) {
 }
 
 function guidGenerator() {
-  var S4 = function() {
+  let S4 = function() {
     return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
   };
   return (S4()+S4()+"-"+S4()+"-"+S4()+"-"+S4()+"-"+S4()+S4()+S4());
@@ -32,7 +32,7 @@ for (let wrapper of buttonWrappers) {
     if (buttonText) {
       let textWrapper = document.createElement('div')
       textWrapper.classList.add('button-text')
-      textNode = document.createTextNode(buttonText)
+      let textNode = document.createTextNode(buttonText)
       textWrapper.appendChild(textNode)
       button.appendChild(textWrapper)
     }
@@ -56,12 +56,12 @@ for (let group of buttongroups) {
 let fields = Array.from(document.getElementsByClassName('field'))
 let buttons = Array.from(document.getElementsByClassName('formbutton'))
 fields = fields.concat(buttons)
-for (var field of fields) {
+for (let field of fields) {
   let captionText = field.getAttribute("data-caption")
   if (captionText) {
     let caption = document.createElement('div')
     caption.classList.add('field-caption')
-    textNode = document.createTextNode(captionText)
+    let textNode = document.createTextNode(captionText)
 
     if (field.childNodes.length == 0) {
       let edit = document.createElement('input')

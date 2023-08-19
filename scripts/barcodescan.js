@@ -54,14 +54,13 @@ window.addEventListener('load', function () {
           selectedDeviceId = localStorage.getItem("preferredCameraId")
         } else {
           console.log("Keine bevorzugte Kamera gefunden. Versuche Rück-Kamera zu finden...");
-          // Ist dies nicht der Fall, wird versucht eine Kamera mit "back" im Namen zu verwenden um möglichst
+          // Ist dies nicht der Fall, wird versucht eine Kamera mit "back" im Namen zu verwenden, um möglichst
           //    die Rück-Kamera zu verwenden
           videoInputDevices.forEach((camera) => {
             if (camera.label.toLowerCase().includes("back")) {
               selectedDeviceId = camera.deviceId
               localStorage.setItem("preferredCameraId", selectedDeviceId)
               backCameraFound = true
-              return;
             }
           });
           // Ist beides nicht möglich, wird die erste Kamera verwendet.
