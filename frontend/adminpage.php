@@ -124,7 +124,7 @@
                 <div class="cell"><?php echo $user["UHS"]; ?></div>
                 <div class="cell cell-permissions">
                   <?php if ($user["CAN_LATE_EDIT"] == 1) : ?>
-                    <span class="mif-pencil icon" title="Korrekurzugang freigeschaltet"></span>
+                    <span class="mif-pencil icon" title="Korrekturzugang freigeschaltet"></span>
                   <?php endif; ?>
                   <?php if ($user["CAN_SEARCH_PATIENTS"] == 1) : ?>
                     <span class="mif-search icon" title="Patientensuche freigeschaltet"></span>
