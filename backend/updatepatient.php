@@ -9,26 +9,6 @@
   }
 ?>
 
-<?php
-  function inputDiff($oldData, $newData) {
-    $changes = array();
-    foreach ($newData as $key => $value) {
-      if(array_key_exists($key, $oldData)) {
-        // Sonderfall Geburtsdatum: Standardwert aus der DB abfangen
-        if ($key == "DOB" && $oldData["DOB"] == "0000-00-00" && $value == "") {
-          continue;
-        }
-        if ($oldData[$key] != $value) {
-          array_push($changes, "[".$key."] " . $oldData[$key] . " => " . $value);
-        }
-      }
-    }
-    return implode("   ", $changes);
-  }
-
-
-
- ?>
 
 <?php
   include_once 'db.php';
@@ -199,8 +179,7 @@
     }
   }
 
-  // Verknüpfte Protokolle werden aktualisiert (INSERT/DEL)
-
+  // Verknüpfte Protokolle werden aktualisiert (INSERT/DELETION)
   $linked_prot = explode(",", $patientendaten["VERKNUEPFUNG"]);
   try {
     // Zuerst müssen alle Referenzen gelöscht werden, die von diesem Protokoll ausgehen, oder darauf zeigen
