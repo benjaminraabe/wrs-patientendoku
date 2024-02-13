@@ -1,4 +1,9 @@
 <?php
+  // Abgesetzte Arztseite für einen Patienten mit einer gegebenen Kennung.
+  // Personalien und Vitalwerte können nicht gelesen oder verändert werden,
+  //    stattdessen kann der Arzt eine Visite zum aktuellen Zeitpunkt dokumentieren.
+
+  
   include_once '../backend/sessionmanagement.php';
 
   $accessible_to = array("ARZT"); // Whitelist für Benutzerrollen

@@ -1,4 +1,10 @@
 <?php
+  // Übersichtsseite für Patienten, für die bereits ein Transport angefordert,
+  //    aber noch keine Entlassung vermerkt worden ist.
+  // Filter nach einer bestimmten UHS ist auch hier durch Einschränkung der
+  //    Datenquellen beim Login möglich.
+
+  
   include_once '../backend/sessionmanagement.php';
 
   $accessible_to = array("ADMIN", "TEL", "SICHTER"); // Whitelist für Benutzerrollen.

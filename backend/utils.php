@@ -2,6 +2,8 @@
   // Implementiert eine Reihe von Utility-Funktionen, die von anderen
   //    importiert werden können.
   // Implementiert insbesondere zwei Wrapper für SQL-Queries mit PDO.
+
+  
   function connectToDB($servername, $username, $password, $dbname) {
     $pdo = new PDO("mysql:host=$servername;dbname=$dbname;charset=utf8mb4", $username, $password);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);

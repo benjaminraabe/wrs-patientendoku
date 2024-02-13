@@ -1,10 +1,17 @@
 <?php
+  // Dieser Endpoint handled eingehende Login-Versuche.
+  // Bei Erfolg werden Session-Variablen initialisiert und der Nutzer wird
+  //    auf die passende Index-Seite weitergeleitet.
+  //    Im Fehlerfall wird der Login-Versuch geloggt.
+
+  
   # CAVE (!): Dieser Code leakt durch die Fehlermeldungen ob ein Account existiert.
   #     Das ist hier nicht relevant, da Accounts sowieso ausgewählt werden, muss aber
   #     beachtet werden, wenn blind ge-Copy-Pasted wird!
   include_once 'db.php';
 
-  $CST_SESSION_LIFETIME = 12 * 60 * 60; # 12 Stunden
+  # Lebenszeit der Session wird auf Kundenwunsch auf 12 Stunden gesetzt.
+  $CST_SESSION_LIFETIME = 12 * 60 * 60;
   session_start(['cookie_lifetime' => $CST_SESSION_LIFETIME]);
 
   $username = $_POST["lg_username"];
@@ -51,6 +58,8 @@
     }
     exit();
   } else {
+    # Bei fehlgeschlagenen Login-Versuchen wird eine Meldung mit der
+    #     IP-Adresse des Clients in den Log geschrieben.
     $user_ip = "Unknown.";
     try {
       $user_ip = $_SERVER['REMOTE_ADDR'];

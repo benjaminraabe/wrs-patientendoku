@@ -1,4 +1,9 @@
 <?php
+  // Dieser Endpoint nimmt Daten zu neuen oder veränderten Patienten in Empfang,
+  //    validiert sie und versucht sie in die Datenbank zu schreiben.
+  // Zusätzlich werden korrespondierende Einträge im Patientenverlauf angelegt.
+
+
   include_once '../backend/sessionmanagement.php';
 
   $accessible_to = array("ADMIN", "SICHTER"); // Whitelist für Benutzerrollen

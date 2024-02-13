@@ -1,5 +1,5 @@
 <?php
-  // Implementiert einen "Login-Check", den alle Unter-Seiten implementieren.
+  // Implementiert einen "Login-Check", den alle Unter-Seiten aufrufen (sollen).
   //    Prüft generalisiert nur, ob ein Client eingeloggt ist, NICHT in welcher Rolle dieser eingeloggt ist.
   //    Dies müssen die Seiten nach Bedarf selbst implementieren.
 

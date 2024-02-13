@@ -136,6 +136,7 @@ function selectPZC(pzc, description) {
   Metro.dialog.close('#pzcDialog');
 }
 
+
 // Open the PZC-Search Dialog and set it up (Clear search, show all entries, focus searchfield)
 function openPzcSuche() {
   let suchfeld = document.getElementById('i-pzcsuche');
@@ -144,6 +145,7 @@ function openPzcSuche() {
   Metro.dialog.open('#pzcDialog');
   suchfeld.focus();
 }
+
 
 function pzcSuche(searchinput) {
   let searchword = searchinput.value;
@@ -157,6 +159,7 @@ function pzcSuche(searchinput) {
     }
   }
 }
+
 
 // Prüft ob die Einträge für die Entlassung vollständig sind.
 function checkExitData() {
@@ -176,6 +179,7 @@ function checkExitData() {
 
   return missingEL;
 }
+
 
 function open_pat_exit() {
   let missingEL = checkExitData();
@@ -203,10 +207,12 @@ function open_pat_exit() {
   Metro.dialog.open('#entlassungDialog');
 }
 
+
 function run_pat_exit() {
   Metro.dialog.close('#entlassungDialog');
   update_pat_data(true);
 }
+
 
 function run_pat_transport_req(with_exit=false) {
   Metro.dialog.close('#transportDialog');
@@ -217,6 +223,7 @@ function run_pat_transport_req(with_exit=false) {
     update_pat_data(false, true);
   }
 }
+
 
 function open_pat_transport() {
   let missingEL = checkExitData();

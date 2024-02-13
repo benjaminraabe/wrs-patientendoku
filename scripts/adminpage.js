@@ -1,3 +1,4 @@
+// Öffnet und Resettet den Dialog zum anlegen/modifizieren eines Benutzers.
 function openDlg(username, data, edit=true) {
   document.getElementById('dlgTitle').textContent = (edit) ? "[" + username + "] bearbeiten" : "Neuer Benutzer"
 
@@ -38,6 +39,8 @@ function openDlg(username, data, edit=true) {
   Metro.dialog.open("#editDialog");
 }
 
+
+// Versucht die Daten für einen neuen oder modifizierten Benutzer an den Server zu senden.
 function updateUserData(edit=true) {
   let data = {}
 
@@ -67,8 +70,6 @@ function updateUserData(edit=true) {
   data["CAN_SEARCH_PATIENTS"] = (document.getElementById('formPatSearch').checked) ? 1 : 0
   data["CAN_BACKDATE_PROTOCOL"] = (document.getElementById('formBackdate').checked) ? 1 : 0
 
-  console.log(data);
-
   fetch("../backend/process_admin_page.php", {
     method: "POST",
     headers: {
@@ -90,11 +91,12 @@ function updateUserData(edit=true) {
   })
   .catch(err => {
     Metro.toast.create("Bei Speichern ist ein Fehler aufgetreten. (FETCH)", null, null, "alert", {showTop: true});
-    console.log(err);
+    console.warn(err);
   })
 }
 
 
+// Versucht die aktualisierte Nachricht für den Monitor an den Server zu senden.
 function updateMonitor() {
   let data = {
     "MONITOR_NACHRICHT" : document.getElementById('formMonitorNachricht').value
@@ -119,6 +121,6 @@ function updateMonitor() {
   })
   .catch(err => {
     Metro.toast.create("Bei Speichern ist ein Fehler aufgetreten. (FETCH)", null, null, "alert", {showTop: true});
-    console.log(err);
+    console.warn(err);
   })
 }

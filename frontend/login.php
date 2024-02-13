@@ -1,4 +1,8 @@
 <?php
+  // Allgemeine Login-Maske, Startseite für alle nicht-eingeloggten Benutzer.
+  // Aktive Benutzer können gewählt werden, zusätzlich können die verfügbaren
+  //    Daten noch zusätzlich eingeschränkt werden.
+
   include_once '../config.php';
   $PAGE_TITLE = "Login";
 ?>

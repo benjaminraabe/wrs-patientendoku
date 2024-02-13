@@ -1,4 +1,8 @@
 <?php
+  // Dieser Endpoint nimmt Datenpakete von der Admin-Seite (Benutzerverwaltung)
+  //    an und versucht diese in die Datenbank zu schreiben.
+  // Der Zugriff auf den Endpoint ist selbstverständlich nur Admins erlaubt.
+
   include_once '../backend/sessionmanagement.php';
 
   $accessible_to = array("ADMIN"); // Whitelist für Benutzerrollen
@@ -60,10 +64,12 @@
 
     }
 
-    // Der Username kann nicht geändert werden, da es sonst ggf. zu Fremdschlüsselproblemen mit dem Verlauf kommt.
-    // TODO: GGf. verhindern, das Arzt-Account / Nicht-Arzt-Accounts ineinander umgewandelt werden (USER_ROLE ändern)
-    //        Dann kann es zu Problemen mit Arzt-Visitationen als Verlaufseinträge kommen. Das ist aber am besten bei den
-    //        Verlaufseinträgen zu ändern.
+    // Der Username kann nicht geändert werden, da es sonst ggf. zu
+    //    Fremdschlüsselproblemen mit dem Verlauf kommt.
+    // TODO: GGf. verhindern, das Arzt-Account / Nicht-Arzt-Accounts
+    // ineinander umgewandelt werden (USER_ROLE ändern).
+    // Dabei könnte es zu Problemen mit Arzt-Visitationen als Verlaufseinträge kommen.
+    // Das ist aber am besten bei den Verlaufseinträgen zu beheben.
     $postdata = nullEmptyString($postdata);
     safeExecute($conn, "UPDATE USER SET UHST_ID = ?, ACTIVE = ?, USER_ROLE = ?,
                         CAN_LATE_EDIT = ?, CAN_SEARCH_PATIENTS = ?, CAN_BACKDATE_PROTOCOL = ? WHERE USERNAME = ?", [

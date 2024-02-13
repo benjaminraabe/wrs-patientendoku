@@ -1,4 +1,9 @@
 <?php
+  // Spezielle Eingabemaske um Patienten nachzutragen. Erlaubt es eine bestimmte
+  //    Eingangszeit für den Patienten zu vergeben.
+  // Der Zugriff auf diese Seite muss explizit für einen Benutzer freigegeben werden.
+
+
   include_once '../backend/sessionmanagement.php';
 
   if ($_SESSION["CAN_SEARCH_PATIENTS"] != 1) {

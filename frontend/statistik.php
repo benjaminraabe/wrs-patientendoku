@@ -1,4 +1,9 @@
 <?php
+  // Implementiert eine große Statistik über vorhandene Patienten und Transporte.
+  // Initial werden alle Daten abgerufen und für die notwendigen Statistiken
+  //    pivotiert oder nachbearbeitet.
+
+  
   include_once '../backend/sessionmanagement.php';
 
   $accessible_to = array("ADMIN", "TEL"); // Whitelist für Benutzerrollen.

@@ -1,7 +1,15 @@
+-- Basis-Daten explizit für das Wacken-Open-Air. Enthält:
+--    # Vordefinierte UHSen und Bereiche
+--    # Kliniken im Umkreis zum Festival
+--    # Oberkategorien und Verletzungsmuster für PZCs
+
+
+
 -- Unfallhilfsstellen
 INSERT INTO UHS_DEFINITION (UHST_ID, NAME) VALUES (1, 'BHP');
 INSERT INTO UHS_DEFINITION (UHST_ID, NAME) VALUES (2, 'Wackinger');
 INSERT INTO UHS_DEFINITION (UHST_ID, NAME) VALUES (3, 'RKISH');
+
 
 
 -- Standardbereiche für BHP, Wackinger, RKISH

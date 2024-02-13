@@ -1,4 +1,9 @@
 <?php
+  // Startseite für eingeloggte Benutzer, "Monitor"-Benutzer werden direkt auf
+  //    die Monitor-Seite weitergeleitet.
+  // Es werden nur Funktionen eingeblendet, auf die der Benutzer zugreifen darf.
+
+  
   include_once '../backend/sessionmanagement.php';
 
   $accessible_to = array("ADMIN", "TEL", "SICHTER", "ARZT"); // Whitelist für Benutzerrollen

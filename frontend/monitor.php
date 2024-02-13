@@ -1,4 +1,11 @@
 <?php
+  // "Lage"-Monitor mit der aktuellen Auslastung, sowie kleinen Statistiken zu
+  //    den Patientenzahlen der aktuellen und letzten Schichten.
+  // Werden nur die Daten gewisser UHSen gewünscht, sollte die Datenquelle beim
+  //    Login eingeschränkt werden.
+  // Um diese Dateneinschränkung abzubilden sind die Queries teils etwas länger...
+
+  
   include_once '../backend/sessionmanagement.php';
 
   $accessible_to = array("ADMIN", "TEL", "SICHTER", "ARZT", "MONITOR"); // Whitelist für Benutzerrollen

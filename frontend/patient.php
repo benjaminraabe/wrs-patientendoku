@@ -1,4 +1,11 @@
 <?php
+  // Große Formularseite für einen Patienten mit übergebener Kennnung (GET-Parameter).
+  // Hier wird ein Patient angelegt oder angezeigt, Änderungen, Transporte und Entlassungen
+  //    werden von dieser Seite ausgeführt.
+  // TODO:  - Seite aufspalten, ggf. in eigenen HTML-Templates.
+  //        - Datenabfragen in eigene Datei auslagen, die Datei ist sehr unübersichtlich...
+
+
   include_once '../backend/sessionmanagement.php';
 
   $accessible_to = array("ADMIN", "TEL", "SICHTER"); // Whitelist für Benutzerrollen

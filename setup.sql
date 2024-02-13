@@ -1,5 +1,10 @@
--- DDL-Wacken-Patientendokumentation
+-- Setup für die Patientendokumentation. Enthält:
+--    # DDL für die Datenbankstruktur
+--    # Default-Eintrag für den Monitor (=leere Nachricht)
+--    # Zugangsdaten für den ENTFERN_MICH_ADMIN für das initiale Setup
 
+
+-- DDL-Wacken-Patientendokumentation
 CREATE TABLE `FAHRZEUGE` (
   `UID` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Unique Identifier',
   `RUFNAME` varchar(100) NOT NULL COMMENT 'Rufname des Fahrzeugs',

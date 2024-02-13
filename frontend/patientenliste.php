@@ -1,4 +1,10 @@
 <?php
+  // Diese Seite implementiert eine Übersicht über alle aktiven (!) Patienten
+  //    die in der ausgewählten UHS aktuell behandelt werden.
+  // Zusätzlich werden Daten wie Behandlungszeit und Zeit bis zur Arztvisite vermerkt.
+  // Wird ein Patient entlassen, entfällt er aus dieser Ansicht.
+
+  
   include_once '../backend/sessionmanagement.php';
 
   $accessible_to = array("ADMIN", "SICHTER", "TEL"); // Whitelist für Benutzerrollen.

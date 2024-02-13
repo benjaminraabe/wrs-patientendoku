@@ -53,7 +53,7 @@
     <div class="page-wrapper">
       <?php include_once '../modules/header.php'; ?>
 
-      <!-- Code scannen -->
+      <!-- Eingabeblock zum Ändern der aktuellen Nachricht auf dem Monitor -->
       <div class="p-5">
         <h4>Monitor-Nachricht</h4>
         <div class="grid">
@@ -86,14 +86,15 @@
             <div class="cell"><b>Berechtigungen</b></div>
           </div>
 
-          <!-- Wenn noch kein Patient vorhanden ist, wird dies gemeldet. -->
+          <!-- Wenn noch kein Benutzer vorhanden ist, wird dies gemeldet.
+                Das ist ein Fallback und sollte im realen Betrieb nicht vorkommen. -->
           <?php if (count($user_list) == 0) : ?>
           <div class="row text-center fg-light" style="background-color: #999999;">
             <div class="cell p-0 pb-1">Bisher keine Patienten.</div>
           </div>
           <?php endif; ?>
 
-          <!-- Patienten werden nach ihrer Nummer sortiert aufgelistet -->
+          <!-- Benutzer werden nach Rollen, Aktivität und Benutzernamen sortiert aufgelistet -->
           <?php if (count($user_list) > 0) : ?>
             <?php $lastcategory = ""; ?>
             <?php foreach ($user_list as $user) :?>
@@ -157,9 +158,11 @@
             <div class="row">
               <div class="cell">Benutzerrolle:</div>
               <div class="cell">
-                <!-- Hier ist von alphabetischer Sortierung abgesehen worden, da sonst "Admin" die Standardauswahl wäre.
-                        Stattdessen wird nach "Berechtigungsleveln" sortiert. Damit wird hoffentlich vermieden, dass
-                        versehentlich ein zu hohes Permission-Level vergeben wird.-->
+                <!-- Hier ist von alphabetischer Sortierung abgesehen worden, da sonst
+                        "Admin" die Standardauswahl wäre.
+                     Stattdessen wird nach "Berechtigungsleveln" sortiert. Damit
+                        wird hoffentlich vermieden, dass versehentlich ein zu hohes
+                        Permission-Level vergeben wird.-->
                 <select class="" data-role="select" data-filter="false" id="formRoleSelect">
                   <option value="MONITOR">Monitor</option>
                   <option value="ARZT">Arzt</option>

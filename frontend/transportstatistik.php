@@ -1,4 +1,9 @@
 <?php
+  // Implementiert die "kleine" Statistik über durchgeführte Transporte.
+  // Einzelne Transporte werden explizit aufgelistet, damit sie später
+  //    z.B. für Abrechnungszwecke verwendet werden können.
+
+  
   include_once '../backend/sessionmanagement.php';
 
   $accessible_to = array("ADMIN", "SICHTER", "TEL"); // Whitelist für Benutzerrollen.

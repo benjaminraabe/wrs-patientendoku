@@ -1,4 +1,11 @@
 <?php
+  // Bietet eine Maske um einen aktiven oder bereits entlassenen Patienten nach
+  //    gewissen Parametern zu suchen. (Kennung, Name, Zeitraum, ...).
+  // Die Daten von bereits entlassenen Patienten können nur mit besonderer
+  //    Berechtigung verändert werden - und die Nachträge werden gesondert
+  //    im Patientenverlauf vermerkt.
+
+  
   include_once '../backend/sessionmanagement.php';
 
   if ($_SESSION["CAN_SEARCH_PATIENTS"] != 1) {
