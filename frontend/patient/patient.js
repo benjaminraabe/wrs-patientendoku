@@ -10,7 +10,7 @@ function update_pat_data(patient_exit=false,
   // Sichtungs- und Abteilungsdaten
   let sichtungskategorie = "UNKNOWN";
   try {
-    sichtungskategorie = document.getElementsByClassName('js-sichtk active')[0].dataset.text;
+    sichtungskategorie = document.getElementsByClassName('js-sichtk active')[0].dataset.text.toUpperCase();
   } catch (e) {console.log("Sichtungskategorie konnte nicht ausgelesen werden.", e);}
 
   let bereich = null;
@@ -180,6 +180,26 @@ function checkExitData() {
   return missingEL;
 }
 
+function openExitPage() {
+  let missingEL = checkExitData();
+
+  if (missingEL.length == 0) {
+    document.getElementById('wrapperExitCheckSuccess').style.display = 'Block';
+    document.getElementById('wrapperExitCheckFail').style.display = 'None';
+  } else {
+    document.getElementById('wrapperExitCheckSuccess').style.display = 'None';
+    document.getElementById('wrapperExitCheckFail').style.display = 'Block';
+
+    let missingHTML = '<div class="row"><div class="cell-2"><span class="mif-cross icon fg-red"></span></div><div class="cell"><b>###ELEMENT###</b> des Patienten fehlt.</div></div>'
+    let newHTML = ''
+    missingEL.forEach((item, i) => {
+      newHTML += missingHTML.replace('###ELEMENT###', item)
+    });
+
+    document.getElementById('ExitCheckFailGrid').innerHTML = newHTML;
+  }
+}
+
 
 function open_pat_exit() {
   let missingEL = checkExitData();
@@ -263,4 +283,20 @@ function displayLoadingScreen(state) {
 
 function openTimeEditDlg() {
   Metro.dialog.open('#dlgTimeEdit');
+}
+
+function openTab(selector, caller) {
+  const tabs = document.getElementsByClassName("tab-patient")
+  const target = document.querySelector(selector)
+
+  document.querySelector(".tab-button.active").classList.remove("active")
+  caller.classList.add("active")
+
+  for (const el of tabs) {
+    el.style.display = "none"
+  }
+  target.style.display = "block"
+
+
+
 }

@@ -3,7 +3,7 @@
   //    importiert werden können.
   // Implementiert insbesondere zwei Wrapper für SQL-Queries mit PDO.
 
-  
+
   function connectToDB($servername, $username, $password, $dbname) {
     $pdo = new PDO("mysql:host=$servername;dbname=$dbname;charset=utf8mb4", $username, $password);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -12,7 +12,7 @@
   }
 
   // SQLi-sicherer Query -> Als Array of Assoziativ-Array
-  // Natürlich nur sicher, wenn man auch "?"-Platzhalter verwendet!!!!!!!
+  // Natürlich nur sicher, wenn man auch "?"-Platzhalter verwendet!!
   function safeQuery($connection, $sql, $parameters = array()) {
     // HTML-Special-Chars werden bereinigt um Template-XSS zu vermeiden
     foreach ($parameters as $key => $value) {
@@ -33,7 +33,7 @@
   }
 
   // SQLi-sicherer Insert/Update -> Anzahl der veränderten Zeilen
-  // Natürlich nur sicher, wenn man auch "?" Platzhalter verwendet!!!!!!!
+  // Natürlich nur sicher, wenn man auch "?" Platzhalter verwendet!!
   function safeExecute($connection, $sql, $parameters = array()) {
     // HTML-Special-Chars werden bereinigt um Template-XSS zu vermeiden
     foreach ($parameters as $key => $value) {
@@ -77,10 +77,10 @@
           continue;
         }
         if ($oldData[$key] != $value) {
-          array_push($changes, "[".$key."] " . $oldData[$key] . " => " . $value);
+          array_push($changes, "[".$key."] " . $oldData[$key] . " ↦ " . $value);
         }
       }
     }
-    return implode("   ", $changes);
+    return implode("\n", $changes);
   }
 ?>

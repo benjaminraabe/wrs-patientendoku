@@ -1,21 +1,9 @@
-<div class="page-header grid p-3 pl-5">
+<div class="page-header grid p-3 pl-7 pr-7">
   <div class="row">
-    <div class="cell">
-      <span class="page-header-title"> <?php echo $PAGE_TITLE; ?> </span>
+    <div class="cell page-header-title">
+      <span class=""> <?php echo $PAGE_TITLE; ?> </span>
     </div>
-    <div class="cell pt-3">
-      <span class="page-header-controls">
-        <button class="image-button primary outline" onclick="open_pat_transport();">
-          <span class="mif-ambulance icon"></span>
-          <span class="caption">Transport</span>
-        </button>
-        <button class="image-button primary outline" onclick="open_pat_exit();">
-          <span class="mif-exit icon"></span>
-          <span class="caption">Entlassen</span>
-        </button>
-      </span>
-    </div>
-    <div class="cell pt-3">
+    <div class="cell pt-3 text-right">
       <span class="page-header-controls">
         <button class="image-button success outline" onclick="update_pat_data();">
           <span class="mif-floppy-disk icon"></span>
@@ -40,14 +28,14 @@
       min-width: 550px;
       margin: 0 auto;
       box-sizing: border-box;
-      margin-bottom: 30px;
       position: relative;
-      border-bottom: 1px solid lightgray;
       z-index: 100;
+      white-space: nowrap;
     }
     .page-header-title {
       font-size: 2em;
       overflow-x: hidden;
+      white-space: nowrap;
     }
     .page-header-controls {
       padding-left: 3px;

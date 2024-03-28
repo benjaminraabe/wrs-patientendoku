@@ -3,7 +3,7 @@
   //    mit der zXing-Library.
   // Ärzte und Sichter werden dann an unterschiedliche Seiten weitergeleitet.
 
-  
+
   include_once '../backend/sessionmanagement.php';
 
   $accessible_to = array("ADMIN", "TEL", "SICHTER", "ARZT"); // Whitelist für Benutzerrollen

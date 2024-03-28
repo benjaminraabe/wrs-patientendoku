@@ -1,0 +1,181 @@
+@media print {
+  body {
+    margin: 0px;
+    margin-top: 20px;
+    background-color: #fff;
+  }
+  .page-header-controls {
+    display: none;
+  }
+  .page-content {
+    padding-top: 30px !important;
+  }
+
+  .tab-navigation {
+    display: none;
+  }
+  .tab-patient {
+    display: block !important;
+    padding-top: 90px;
+    page-break-before: always;
+  }
+  .tab-patient:first-of-type {
+    padding-top: 0px;
+    page-break-before: avoid;
+  }
+  .tab-patient:last-of-type {
+    display: none !important;
+  }
+}
+
+
+.page-content {
+  padding-top: 70px;
+  padding-left: 20px;
+  padding-right: 20px;
+  min-width: 700px;
+}
+
+
+.tag-input {
+  padding-right: 10px;
+  padding-left: 10px;
+}
+
+
+.verlauf {
+  box-sizing: border-box;
+  /* border: 1px solid red; */
+}
+.verlauf > .row {
+  border-bottom: 1px solid lightgray;
+  box-sizing: border-box;
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
+.verlauf > .row:last-of-type {
+  border-bottom: none;
+}
+.verlauf > .row > .cell {
+  white-space: pre-line;
+}
+.verlauf > .row > .cell:first-of-type {
+  white-space: normal;
+  box-sizing: border-box;
+  color: gray;
+}
+
+.pzctable {
+  border: 1px solid lightgray;
+  border-bottom: None;
+}
+.pzctable > .row:hover {
+  cursor: pointer;
+  background-color: #e6e6e6;
+}
+
+.dialog {
+  max-height: 75vh;
+}
+.hidden {
+  display: none;
+}
+
+#form-Pzc, #form-beschreibung-wrapper {
+  cursor: pointer;
+}
+
+#patform-loader {
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  z-index: 101;
+  top: 82px;
+  bottom: 65px;
+  left: 0;
+  background-color: #fff;
+  opacity: 0.6;
+  display: none;
+}
+#patform-loader > div {
+  width: 25vw;
+  height: 25vw;
+  margin: 0 auto;
+}
+
+
+/* Sichtungs-Buttons */
+.bg-button {
+  background-color: #e6e6e6;
+}
+.bg-prio1 {
+  background-color: rgba(255, 0, 0, 0.2)
+}
+.bg-prio2 {
+  background-color: rgba(255, 128, 0, 0.2)
+}
+.bg-prio3 {
+  background-color: rgba(255, 255, 0, 0.2)
+}
+.bg-prio4 {
+  background-color: rgba(0, 255, 0, 0.1)
+}
+.bg-prio5 {
+  background-color: rgba(0, 0, 255, 0.1)
+}
+
+
+
+/* Korrekturzugang */
+.banner-korrektur {
+  width: 90%;
+  margin: 0 auto;
+  background-color: #ffb580;
+  padding: 10px;
+  text-align: center;
+  border: 3px solid black;
+}
+
+
+
+/* Tab-Navigation */
+.tab-navigation {
+  border-bottom: 1px solid #999999;
+  padding-bottom: 0px;
+}
+.tab-button {
+  border: none;
+  border: 1px solid lightgray;
+  border-bottom: none;
+  background-color: #fff;
+  color: rgba(0, 0, 0, 0.4);
+  padding: 10px;
+  margin-right: 6px;
+  margin-bottom: -1px;
+}
+.tab-button.active {
+  color: #1a1a1a;
+  border: 1px solid #999999;
+  border-bottom: 1px solid #fff;
+  opacity: 1;
+}
+.tab-button:hover {
+  background-color: rgba(0, 0, 0, 0.02);
+  cursor: pointer;
+}
+.tab-button.active:hover {
+  background-color: #fff;
+  cursor: default;
+}
+
+.tab-wrapper {
+  padding-top: 30px;
+}
+
+.tab-patient {
+  display: none;
+  padding-bottom: 30px;
+}
+.tab-patient:first-of-type {
+  display: block;
+}
