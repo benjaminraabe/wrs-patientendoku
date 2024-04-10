@@ -49,9 +49,7 @@
       # Patient existiert noch nicht und wird nun angelegt.
       if (count($patientendaten) == 0) {
         $is_new = true;
-        safeExecute($conn, "INSERT INTO PATIENTEN(PATIENTEN_ID)
-        VALUES(?)",
-        [$pat_id]);
+        safeExecute($conn, "INSERT INTO PATIENTEN(PATIENTEN_ID) VALUES(?)", [$pat_id]);
         safeExecute($conn, "INSERT INTO PATIENTENVERLAUF(PATIENTEN_ID, USERNAME, EINTRAG)
         VALUES(?, ?, ?)",
         [$pat_id, $_SESSION['USER_ID'], "Patient erfasst."]);

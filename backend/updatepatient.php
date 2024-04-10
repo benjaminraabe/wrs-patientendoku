@@ -244,7 +244,7 @@
         // Anforderung im Verlauf vermerken
         safeExecute($conn, "INSERT INTO PATIENTENVERLAUF(PATIENTEN_ID, USERNAME, EINTRAG)
         VALUES(?, ?, ?)",
-        [$patientendaten["PATIENTEN_ID"], $_SESSION['USER_ID'], "Patient an Rettungsmittel ".$postdata["TRANSPORT_RUFNAME"]." übergeben. ". $klinikstring]);
+        [$patientendaten["PATIENTEN_ID"], $_SESSION['USER_ID'], "Patient an Rettungsmittel ".$postdata["TRANSPORT_RUFNAME"]." übergeben.\n". $klinikstring]);
       } catch (\Exception $e) {
         echo "Error: Bei der Übergabe an das Rettungsmittel ist ein Fehler aufgetreten. Bitte überprüfen Sie den Datenstand auf der Patientenseite. ".$e;
         exit();
