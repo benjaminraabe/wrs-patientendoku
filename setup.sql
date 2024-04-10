@@ -91,6 +91,7 @@ CREATE TABLE `PATIENTENVERLAUF` (
   `PATIENTEN_ID` varchar(50) NOT NULL COMMENT 'ID eine Patienten. Referenziert Patienten.PATIENTEN_ID',
   `USERNAME` varchar(100) NOT NULL COMMENT 'Benutzer der den Eintrag vornimmt. Referenziert Benutzer.USERNAME',
   `TIMESTAMP` timestamp NOT NULL DEFAULT current_timestamp() COMMENT 'Zeit der Eintragung',
+  `ART` int(11) NOT NULL DEFAULT 0 COMMENT 'Art der Eintragung.',
   `EINTRAG` varchar(1000) NOT NULL COMMENT 'Text / Anlass der Eintragung',
   PRIMARY KEY (`UID`),
   KEY `patientenverlauf_FK` (`PATIENTEN_ID`),
