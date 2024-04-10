@@ -201,74 +201,13 @@ function openExitPage() {
 }
 
 
-function open_pat_exit() {
-  let missingEL = checkExitData();
-
-  if (missingEL.length == 0) {
-    document.getElementById('dlgEntlassenSuccess').style.display = 'Block';
-    document.getElementById('dlgEntlassenSuccessButton').style.display = 'Block';
-    document.getElementById('dlgEntlassenFail').style.display = 'None';
-    document.getElementById('dlgEntlassenForceButton').style.display = 'None';
-  } else {
-    document.getElementById('dlgEntlassenSuccess').style.display = 'None';
-    document.getElementById('dlgEntlassenSuccessButton').style.display = 'None';
-    document.getElementById('dlgEntlassenFail').style.display = 'Block';
-    document.getElementById('dlgEntlassenForceButton').style.display = 'inline-flex';
-
-    let missingHTML = '<div class="row"><div class="cell-2"><span class="mif-cross icon fg-red"></span></div><div class="cell"><b>###ELEMENT###</b> des Patienten fehlt.</div></div>'
-    let newHTML = ''
-    missingEL.forEach((item, i) => {
-      newHTML += missingHTML.replace('###ELEMENT###', item)
-    });
-
-    document.getElementById('dlgEntlassenFailGrid').innerHTML = newHTML;
-  }
-
-  Metro.dialog.open('#entlassungDialog');
-}
-
-
-function run_pat_exit() {
-  Metro.dialog.close('#entlassungDialog');
-  update_pat_data(true);
-}
-
-
 function run_pat_transport_req(with_exit=false) {
-  Metro.dialog.close('#transportDialog');
+  // Mit der Flag wird der Patient an ein Rettungsmittel übergeben
   if (with_exit) {
-    // Mit der Flag wird der Patient an ein Rettungsmittel übergeben
     update_pat_data(false, false, true);
   } else {
     update_pat_data(false, true);
   }
-}
-
-
-function open_pat_transport() {
-  let missingEL = checkExitData();
-
-  if (missingEL.length == 0) {
-    document.getElementById('dlgTransportSuccess').style.display = 'Block';
-    document.getElementById('dlgTransportButton').style.display = 'Block';
-    document.getElementById('dlgTransportFail').style.display = 'None';
-    document.getElementById('dlgTransportForceButton').style.display = 'None';
-  } else {
-    document.getElementById('dlgTransportSuccess').style.display = 'None';
-    document.getElementById('dlgTransportButton').style.display = 'None';
-    document.getElementById('dlgTransportFail').style.display = 'Block';
-    document.getElementById('dlgTransportForceButton').style.display = 'inline-flex';
-
-    let missingHTML = '<div class="row"><div class="cell-2"><span class="mif-cross icon fg-red"></span></div><div class="cell"><b>###ELEMENT###</b> des Patienten fehlt.</div></div>'
-    let newHTML = ''
-    missingEL.forEach((item, i) => {
-      newHTML += missingHTML.replace('###ELEMENT###', item)
-    });
-
-    document.getElementById('dlgTransportFailGrid').innerHTML = newHTML;
-  }
-
-  Metro.dialog.open('#transportDialog');
 }
 
 
@@ -285,6 +224,8 @@ function openTimeEditDlg() {
   Metro.dialog.open('#dlgTimeEdit');
 }
 
+
+// Darstellungsfunktion für die Tab-Navigation
 function openTab(selector, caller) {
   const tabs = document.getElementsByClassName("tab-patient")
   const target = document.querySelector(selector)
@@ -296,7 +237,4 @@ function openTab(selector, caller) {
     el.style.display = "none"
   }
   target.style.display = "block"
-
-
-
 }
