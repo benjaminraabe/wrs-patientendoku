@@ -3,7 +3,7 @@
   // Initial werden alle Daten abgerufen und für die notwendigen Statistiken
   //    pivotiert oder nachbearbeitet.
 
-  
+
   include_once '../backend/sessionmanagement.php';
 
   $accessible_to = array("ADMIN", "TEL"); // Whitelist für Benutzerrollen.
@@ -239,7 +239,7 @@
         </h4>
         <h4 class="pr-5 pl-5"><small>
           Selbstständig eingetroffen: <?php if (count($eingang) > 1){echo $eingang[1]["CT"];}else {echo "-";} ?>
-          | Von W:R:S zugeführt: <?php if (count($eingang) > 2){echo $eingang[2]["CT"];}else {echo "-";} ?>
+          | Zugeführt durch SAN-Dienst: <?php if (count($eingang) > 2){echo $eingang[2]["CT"];}else {echo "-";} ?>
           | Unbekannt: <?php if (count($eingang) > 0){echo $eingang[0]["CT"];}else {echo "-";} ?>
         </small></h4>
         <div class="grid pr-5 pl-5 mb-8 patliste-liste rkish-table">

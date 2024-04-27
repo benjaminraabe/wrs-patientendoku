@@ -64,10 +64,10 @@
         <button type="button" class="js-eingangsart <?php if($patientendaten["EINGANGSART"] != 1 && $patientendaten["EINGANGSART"] != 2) {echo "active";} ?>" data-caption="Eingangsart" data-text="Unbekannt" data-value="0"></button>
       </div>
       <div class="cell">
-        <button type="button" class="js-eingangsart <?php if($patientendaten["EINGANGSART"] == 1) {echo "active";} ?>" data-caption="Eingangsart" data-text="UHS selbstständig aufgesucht" data-value="1"  ></button>
+        <button type="button" class="js-eingangsart <?php if($patientendaten["EINGANGSART"] == 1) {echo "active";} ?>" data-caption="Eingangsart" data-text="Selbstständig" data-value="1"  ></button>
       </div>
       <div class="cell">
-        <button type="button" class="js-eingangsart <?php if($patientendaten["EINGANGSART"] == 2) {echo "active";} ?>" data-caption="Eingangsart" data-text="Zugeführt durch W:R:S" data-value="2"></button>
+        <button type="button" class="js-eingangsart <?php if($patientendaten["EINGANGSART"] == 2) {echo "active";} ?>" data-caption="Eingangsart" data-text="Durch SAN-Dienst" data-value="2"></button>
       </div>
   </div>
   <div class="row textfieldwrapper" style="border-top: 1px solid black;">
