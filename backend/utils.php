@@ -66,6 +66,26 @@
     return $arr;
   }
 
+  // Wandelt einen gegebenen Timestamp in eine String-Darstellung der Uhrzeit im Format "01:23 Uhr" um.
+  function timeToClock($timestamp) {
+    if (is_null($timestamp)) {
+      return "##:## Uhr";
+    } else {
+      return date("H:i", strtotime($timestamp)) . " Uhr";
+    }
+  }
+
+  // Wandelt einen gegebenen Anzahl Sekunden in eine Repräsentation in Stunden/Minuten um.
+  function secondsToStr($seconds) {
+    $res = "";
+    if ($seconds >= 3600) {
+      $res = $res . floor($seconds / 3600) . "h ";
+      $seconds = ($seconds % 3600);
+    }
+    $res = $res . floor($seconds / 60) . "min";
+    return $res;
+  }
+
   // Gleicht zwei Datensätze (assoziative Arrays) miteinander ab und produziert
   //    einen String mit den Änderungen.
   function inputDiff($oldData, $newData) {

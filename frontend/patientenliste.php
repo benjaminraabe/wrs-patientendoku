@@ -17,6 +17,7 @@
 
 <?php
   include_once '../backend/db.php';
+  include_once '../backend/utils.php';
   $patienten = safeQuery($conn, "SELECT p.SICHTUNGSKATEGORIE, p.ZEIT_EINGANG,  p.PATIENTEN_ID, p.PZC, pzc.DESCRIPTION, b.NAME, a.ARZTVISITE FROM PATIENTEN as p
                                   LEFT JOIN BEREICHE AS b
                                     on p.BEREICH_ID = b.BEREICH_ID
@@ -113,27 +114,18 @@
               <div class="cell-2 p-0 pb-1"><?php echo $patient["NAME"]; ?></div>
             </div>
           <?php endif; ?>
-          <?php
-            if (is_null($patient["ARZTVISITE"])) {
-              $arztzeit = "##:## Uhr";
-            } else {
-              $arztzeit = date("H:i", strtotime($patient["ARZTVISITE"])) . " Uhr";
-            }
-
-           ?>
           <div class="row data-row pt-2 pb-2" onclick="window.location.href = 'patient.php?id=<?php echo $patient["PATIENTEN_ID"] ?>'">
-            <div class="cell-2 text-center" style="line-height: 3em;"><?php echo $patient["PATIENTEN_ID"] ?></div>
+            <div class="cell-2 text-center" style="line-height: 3em;">
+              <?php echo $patient["PATIENTEN_ID"] ?>
+            </div>
             <div class="cell">
               <?php echo $patient["SICHTUNGSKATEGORIE"] ?> <br>
               <?php echo $patient["PZC"] ?> - <?php echo $patient["DESCRIPTION"] ?>
             </div>
             <div class="cell">
-              <span class="mif-enter"></span> <?php echo date("H:i", strtotime($patient["ZEIT_EINGANG"])) . " Uhr"; ?>
-              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              <span class="mif-stethoscope"></span> <?php echo $arztzeit; ?> <br>
-              <span class="mif-watch"></span> <?php
-                echo floor((time() - strtotime($patient["ZEIT_EINGANG"])) / 3600) . "h ".
-                floor(((time()-strtotime($patient["ZEIT_EINGANG"])) % 3600) / 60) . "min";?>
+              <span class="mif-enter"></span>               <?php echo timeToClock($patient["ZEIT_EINGANG"]) ?>
+              <span class="mif-stethoscope ml-10"></span>   <?php echo timeToClock($patient["ARZTVISITE"]) ?> <br>
+              <span class="mif-watch"></span>               <?php echo secondsToStr(time() - strtotime($patient["ZEIT_EINGANG"]))?>
             </div>
           </div>
         <?php endforeach ?>
