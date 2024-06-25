@@ -58,6 +58,14 @@
   line-height: 42px;
 }
 
+.meldung {
+  width: 90%;
+  margin: 0 auto;
+  padding: 13px;
+  text-align: center;
+  border: 2px solid #da532c;
+}
+
 @media print {
   .rkish-table {page-break-after: always;}
   .no-page-break {page-break-after: avoid;}

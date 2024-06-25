@@ -3,7 +3,7 @@
   //    die Monitor-Seite weitergeleitet.
   // Es werden nur Funktionen eingeblendet, auf die der Benutzer zugreifen darf.
 
-  
+
   include_once '../backend/sessionmanagement.php';
 
   $accessible_to = array("ADMIN", "TEL", "SICHTER", "ARZT"); // Whitelist für Benutzerrollen
@@ -46,10 +46,10 @@
           <span class="mif-barcode icon"></span>
         </a>
         <?php if (in_array($_SESSION["USER_ROLE"], array("ADMIN", "SICHTER", "TEL"), true)): ?>
-        <a class="shortcut primary outline" href="patientenliste.php">
-          <span class="caption">Pat. Liste</span>
-          <span class="mif-list-numbered icon"></span>
-        </a>
+          <a class="shortcut primary outline" href="patientenliste.php">
+            <span class="caption">Pat. Liste</span>
+            <span class="mif-list-numbered icon"></span>
+          </a>
         <?php endif; ?>
       </div>
 
@@ -72,7 +72,7 @@
           </a>
         <?php endif; ?>
         <?php if (in_array($_SESSION["USER_ROLE"], array("ADMIN", "TEL", "SICHTER"), true)): ?>
-          <a class="shortcut primary outline" href="offeneTransporte.php">
+          <a class="shortcut primary outline" href="offeneTransporte.php?lastQuittance=-1">
             <span class="caption">Anforderung</span>
             <span class="mif-chat icon"></span>
           </a>
@@ -82,33 +82,33 @@
 
 
 
-        <div class="pl-5 mb-5 pt-3">
-          <h4>Werkzeuge</h4>
-          <?php if ($_SESSION["CAN_SEARCH_PATIENTS"] == 1): ?>
-          <a class="shortcut alert outline" href="patientensuche.php">
-            <span class="caption">Pat. Suche</span>
-            <span class="mif-search icon"></span>
-          </a>
-          <?php endif; ?>
-          <!-- Nachtragezugang -->
-          <!-- Zugriff haben Sichter und Admin mit Sonderberechtigung. TEL ist ausgeschlossen, da diese nur Leseberechtigungen
-                  am Patienten haben und das ein ganz unglückliches Durcheinander gibt. -->
-          <?php if (in_array($_SESSION["USER_ROLE"], array("SICHTER", "ADMIN"), true)): ?>
-            <?php if ($_SESSION["CAN_BACKDATE_PROTOCOL"] == 1): ?>
-              <a class="shortcut alert outline" href="nachtrageseite.php">
-                <span class="caption">Nachtragen</span>
-                <span class="mif-alarm icon"></span>
-              </a>
-            <?php endif; ?>
-          <?php endif; ?>
-          <!-- Admin-Werkzeuge -->
-          <?php if (in_array($_SESSION["USER_ROLE"], array("ADMIN"), true)): ?>
-            <a class="shortcut alert outline"  href="adminpage.php">
-              <span class="caption">Admin</span>
-              <span class="mif-wrench icon"></span>
+      <div class="pl-5 mb-5 pt-3">
+        <h4>Werkzeuge</h4>
+        <?php if ($_SESSION["CAN_SEARCH_PATIENTS"] == 1): ?>
+        <a class="shortcut alert outline" href="patientensuche.php">
+          <span class="caption">Pat. Suche</span>
+          <span class="mif-search icon"></span>
+        </a>
+        <?php endif; ?>
+        <!-- Nachtragezugang -->
+        <!-- Zugriff haben Sichter und Admin mit Sonderberechtigung. TEL ist ausgeschlossen, da diese nur Leseberechtigungen
+                am Patienten haben und das ein ganz unglückliches Durcheinander gibt. -->
+        <?php if (in_array($_SESSION["USER_ROLE"], array("SICHTER", "ADMIN"), true)): ?>
+          <?php if ($_SESSION["CAN_BACKDATE_PROTOCOL"] == 1): ?>
+            <a class="shortcut alert outline" href="nachtrageseite.php">
+              <span class="caption">Nachtragen</span>
+              <span class="mif-alarm icon"></span>
             </a>
           <?php endif; ?>
-        </div>
+        <?php endif; ?>
+        <!-- Admin-Werkzeuge -->
+        <?php if (in_array($_SESSION["USER_ROLE"], array("ADMIN"), true)): ?>
+          <a class="shortcut alert outline"  href="adminpage.php">
+            <span class="caption">Admin</span>
+            <span class="mif-wrench icon"></span>
+          </a>
+        <?php endif; ?>
+      </div>
 
       <?php include_once '../modules/footer.php'; ?>
     </div>

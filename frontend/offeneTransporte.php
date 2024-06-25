@@ -4,7 +4,7 @@
   // Filter nach einer bestimmten UHS ist auch hier durch Einschränkung der
   //    Datenquellen beim Login möglich.
 
-  
+
   include_once '../backend/sessionmanagement.php';
 
   $accessible_to = array("ADMIN", "TEL", "SICHTER"); // Whitelist für Benutzerrollen.
@@ -44,14 +44,26 @@
 
   // Halte den Zeitpunkt der Datenabfrage fest.
   $data_timestamp = time();
+  $time_last_quittance = 0;
+  if(array_key_exists("lastQuittance", $_GET)) {
+    $time_last_quittance = $_GET["lastQuittance"];
+  }
 
-  // Findet den Unix-Epock-Zeitstempel der neusten Transportanforderung.
   $newest_transport = 0;
-  foreach ($transporte as $t) {
+  $count_new_transports = 0;
+  foreach ($transporte as $key => $t) {
     $ts = strtotime($t["TIMESTAMP"]);
+    // Findet den Unix-Epock-Zeitstempel der neusten Transportanforderung.
     if ($ts > $newest_transport) {
       $newest_transport = $ts;
     }
+    // Zählt "unquittierte" Transporte und markiert diese
+      if ($ts > $time_last_quittance && $time_last_quittance > -1) { // Edge-Case: Erster Aufruf
+        $transporte[$key]["IS_NEW"] = True;
+        $count_new_transports++;
+      } else {
+        $transporte[$key]["IS_NEW"] = False;
+      }
   }
  ?>
 
@@ -76,6 +88,15 @@
   <body>
     <div class="page-wrapper">
       <?php include_once '../modules/header.php'; ?>
+
+
+      <!-- Meldung über unquittierte Transporte -->
+      <?php if ($count_new_transports > 0) : ?>
+        <div id="transport_alert" class="meldung mb-7">
+          <?php echo $count_new_transports ?> neue Transportanforderung<?php if($count_new_transports > 1) echo "en" ?>
+          <button class="button secondary outline ml-5" onclick="confirmTransports()">Quittieren</button>
+        </div>
+      <?php endif; ?>
 
       <div class="grid patliste-liste pl-3 pr-3">
         <div class="row header-row fg-light" style="background-color: #024ea4;">
@@ -115,6 +136,9 @@
 
             <div class="row data-row" onclick="window.location.href = 'patient.php?id=<?php echo $transport["PATIENTEN_ID"] ?>'">
               <div class="cell-2 text-center" lang="de" style="line-height: 60px;">
+                <?php if ($transport["IS_NEW"] === True): ?>
+                  <span class='newtransportwarning mif-warning mr-2' style="color:#e3a21a"></span>
+                <?php endif; ?>
                 <?php echo $transport["PATIENTEN_ID"]; ?>
               </div>
               <div class="cell pt-3">
@@ -150,10 +174,11 @@
     <script type="text/javascript">
       setTimeout(() => {
         localStorage.setItem("lastUpdateTime", <?php echo $data_timestamp; ?>)
-        window.location.reload()
+        window.location.href = window.location.href.split("?")[0] + '?lastQuittance=' + (localStorage.getItem("lastConfirmedTime") || 0)
       }, 10000);
 
       let lastUpdateTime = localStorage.getItem("lastUpdateTime")
+      let lastConfirmedTime = localStorage.getItem("lastConfirmedTime") || 0
       // Fenster wurde noch nie geöffnet, kein Ton.
       if (!lastUpdateTime) {}
       else {
@@ -163,6 +188,16 @@
         }
       }
 
+
+      function confirmTransports() {
+        // Timestamp wird als UNIX-Timestamp (Anzahl Sekunden, anstatt Anzahl Millisekunden) gespeichert
+        //    Damit es mit dem PHP-Timestamp kompatibel ist.
+        localStorage.setItem("lastConfirmedTime", Math.floor(Date.now()/1000))
+        document.getElementById('transport_alert').style.display = "none";
+        for (const el of document.getElementsByClassName('newtransportwarning')) {
+          el.style.display = "none";
+        }
+      }
 
     </script>
   </body>
