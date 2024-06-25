@@ -4,7 +4,7 @@
   //    auf die passende Index-Seite weitergeleitet.
   //    Im Fehlerfall wird der Login-Versuch geloggt.
 
-  
+
   # CAVE (!): Dieser Code leakt durch die Fehlermeldungen ob ein Account existiert.
   #     Das ist hier nicht relevant, da Accounts sowieso ausgewählt werden, muss aber
   #     beachtet werden, wenn blind ge-Copy-Pasted wird!
@@ -21,14 +21,14 @@
   try {
     $logindata = safeQuery($conn, "SELECT * FROM USER WHERE USERNAME = ? AND ACTIVE = 1;", [$username]);
   } catch (\Exception $e) {
-    header('Location: ../frontend/login.php?errmsg=dbfehler');
+    header('Location: ../frontend/login.php?errmsg=dberror');
     exit();
   }
 
   # Wenn kein Eintrag gefunden wird, war der Username nicht gültig. Abbruch.
   #   Sollte nie eintreten, ist ein Hinweis auf Schindluder oder Fehler im Frontend.
   if (count($logindata) < 1) {
-    header('Location: ../frontend/login.php?errmsg=invalid');
+    header('Location: ../frontend/login.php?errmsg=loginerror');
     exit();
   }
   $user_data = $logindata[0];
@@ -65,7 +65,7 @@
       $user_ip = $_SERVER['REMOTE_ADDR'];
     } catch (\Exception $e) {}
     error_log("[LOGIN-ERROR] Fehlgeschlagener Login (".$username.") von der IP: ".$user_ip);
-    header('Location: ../frontend/login.php?errmsg=pwwrong');
+    header('Location: ../frontend/login.php?errmsg=loginerror');
     exit();
   }
  ?>

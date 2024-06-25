@@ -20,14 +20,11 @@
   if (isset($_GET["errmsg"])) {
     $err_code = $_GET["errmsg"];
     switch ($err_code) {
-      case 'invalid':
-        $errmsg = "Fehler: Der Nutzername ist nicht gültig.";
-        break;
-      case 'dbfehler':
+      case 'dberror':
         $errmsg = "Bei der Datenbankabfrage ist ein Fehler aufgetreten. Bitte wenden Sie sich an den Support.";
         break;
-      case 'pwwrong':
-        $errmsg = "Fehler: Das Passwort ist nicht gültig.";
+      case 'loginerror':
+        $errmsg = "Fehler beim Login: Username und/oder Passwort falsch.";
         break;
       default:
         $errmsg = "Ein unbekannter Fehler ist aufgetreten. Bitte wenden Sie sich an den Support.";
@@ -65,36 +62,44 @@
             <div class="row mt-4">
               <div class="cell">
                 <label>Benutzer</label>
-                <select class="" name="lg_username" data-role="select">
-                  <?php
-                    # Sortiert die User-Accounts nach Gruppen und fügt sie in die entsprechende Opt-Group hinzu
-                    $roles = array("Arzt", "Sichter", "Monitor", "TEL", "Admin");
-                    $user_in_groups = array(array(),array(),array(),array(),array());
 
-                    foreach ($users as $user) {
-                      foreach ($roles as $idx => $role) {
-                        if ($user["USER_ROLE"] == strtoupper($role)) {
-                          array_push($user_in_groups[$idx], $user);
+                <?php if ($SHOW_USERNAMES_ON_LOGIN === True): ?>
+                  <!-- Auswahl der Benutzernamen in einer Select-Box. Aktivierbar in der Config. -->
+                  <select class="" name="lg_username" data-role="select">
+                    <?php
+                      # Sortiert die User-Accounts nach Gruppen und fügt sie in die entsprechende Opt-Group hinzu
+                      $roles = array("Arzt", "Sichter", "Monitor", "TEL", "Admin");
+                      $user_in_groups = array(array(),array(),array(),array(),array());
+
+                      foreach ($users as $user) {
+                        foreach ($roles as $idx => $role) {
+                          if ($user["USER_ROLE"] == strtoupper($role)) {
+                            array_push($user_in_groups[$idx], $user);
+                          }
                         }
                       }
-                    }
 
-                    foreach ($user_in_groups as $idx => $usergroup) {
-                      if (count($usergroup) == 0) {continue;}
-                      echo "<optgroup label='$roles[$idx]'>";
-                      foreach ($usergroup as $user) {
-                        // Wenn der Nutzer in der URL übergeben wurde, wird dieser ausgewählt
-                        $selected = '';
-                        if (isset($_GET["u"]) && ($user["USERNAME"] == $_GET["u"])) {
-                          $selected = 'selected';
+                      foreach ($user_in_groups as $idx => $usergroup) {
+                        if (count($usergroup) == 0) {continue;}
+                        echo "<optgroup label='$roles[$idx]'>";
+                        foreach ($usergroup as $user) {
+                          // Wenn der Nutzer in der URL übergeben wurde, wird dieser ausgewählt
+                          $selected = '';
+                          if (isset($_GET["u"]) && ($user["USERNAME"] == $_GET["u"])) {
+                            $selected = 'selected';
+                          }
+                          echo "<option value='" . $user["USERNAME"] . "'".$selected.">" . $user["USERNAME"] . "</option>";
                         }
-                        echo "<option value='" . $user["USERNAME"] . "'".$selected.">" . $user["USERNAME"] . "</option>";
+                        echo "</optgroup>";
                       }
-                      echo "</optgroup>";
-                    }
 
-                   ?>
-                </select>
+                     ?>
+                  </select>
+                <?php else: ?>
+                  <!-- Eingabe der Benutzernamen als Input. -->
+                  <input type="text" name="lg_username" value="" data-role="input">
+                <?php endif; ?>
+
               </div>
             </div>
 

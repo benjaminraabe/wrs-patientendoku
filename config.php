@@ -12,4 +12,12 @@
   // Name der Organisation. Wird im Titel der Website angezeigt.
   $ORG_NAME = "W:R:S";
 
+
+  // Optional können die Benutzernamen mit ihren zugehörigen Rollen auf der Login-Seite
+  //    als Select-Box angezeigt werden. Standardmäßig ist diese Einstellung deaktiviert.
+  // Wird die Option aktiviert, exponiert das die Benutzernamen an einen möglichen Angreifer.
+  //    Grundsätzlich wird das nicht empfohlen, wenn es aber unbedingt gewünscht ist,
+  //    kann es hier aktiviert werden.
+  $SHOW_USERNAMES_ON_LOGIN = False;
+
  ?>
