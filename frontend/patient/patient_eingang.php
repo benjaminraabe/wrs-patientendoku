@@ -119,12 +119,12 @@
               <div class="cell p-0 pl-2"><?php echo $row["CAT_DESCRIPTION"]; ?></div>
             </div>
           <?php endif; ?>
-          <div class="row" onclick="selectPZC('<?php echo $row["PZC"]; ?>', '<?php echo $row["DESCRIPTION"]; ?>');" style="border-bottom: 1px solid lightgray;">
+          <div class="row" onclick="selectPZC('<?php echo $row["PZC"]; ?>', '<?php echo htmlspecialchars($row["DESCRIPTION"]); ?>');" style="border-bottom: 1px solid lightgray;">
             <div class="cell cell-2 text-center">
               <?php echo $row["PZC"] ?> <br>
             </div>
             <div class="cell cell-10">
-              <?php echo $row["DESCRIPTION"]; ?>
+              <?php echo htmlspecialchars($row["DESCRIPTION"]); ?>
             </div>
             <div style="display: none;"><?php echo $row["CAT_DESCRIPTION"]; ?></div>
           </div>
