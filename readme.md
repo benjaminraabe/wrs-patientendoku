@@ -34,7 +34,7 @@ Projektmanagement durch Sebastian Rappmann.
 
 - Zugangsdaten für die Datenbank in Config-Datei ```config.php``` anpassen.
 
-- Initialer Login mit mitgeliefertem "ENTFERN_MICH_ADMIN" und Passwort "root". Accounts in der Benutzerverwaltung anlegen und "ENTFERN_MICH_ADMIN" deaktivieren oder aus der Datenbank löschen.
+- Initialer Login mit mitgeliefertem "DEAKTIVIER_MICH_ADMIN" und Passwort "root". Accounts in der Benutzerverwaltung anlegen und "DEAKTIVIER_MICH_ADMIN" deaktivieren oder aus der Datenbank löschen.
 
 - _Optional_: Daten-Setup für Wacken einspielen, indem ```wrs_daten_setup.sql``` ausgeführt wird.
 
@@ -50,12 +50,6 @@ Projektmanagement durch Sebastian Rappmann.
 
 
 ## Bekannte Fehler
-
-**Arzt-Accounts und Berechnung der Wartezeiten**
-
-Wird einem Arzt-Account eine andere Benutzerrolle zugewiesen werden seine Visiten nicht mehr als solche erkannt. Die kann die Berechnung der Wartezeiten durcheinander bringen. Wird analog dazu z.B. einem Sichter-Account die "Arzt"-Rolle zugewiesen, so werden seine Einträge als Arzt-Visiten betrachtet.
-
-Für den Augenblick wird empfohlen nur frischen Accounts die "Arzt"-Rolle zuzuweisen und diese im Nachgang nicht zu ändern.
 
 **Ausdrucke der Statistiken unter Chrome**
 

@@ -23,7 +23,8 @@
       <!-- "Normaler" Patientenausgang ohne Transport -->
       <div class="wrapper-exit">
         <h4>Patient Entlassen</h4>
-        <button class="image-button success outline w-100" onclick="update_pat_data(true);">
+        <button class="image-button success outline w-100" onclick="update_pat_data(true);"
+          <?php if(!$has_write_access){echo "disabled";} ?>>
           <span class="mif-exit icon"></span>
           <span class="caption">Nach Hause entlassen</span>
         </button>
@@ -68,13 +69,15 @@
 
         <?php if (is_null($patientendaten["TRANSPORTKATEGORIE"])): ?>
           <!-- Transportanforderung -->
-          <button class="image-button success outline w-100" onclick="run_pat_transport_req();">
+          <button class="image-button success outline w-100" onclick="run_pat_transport_req();"
+            <?php if(!$has_write_access){echo "disabled";} ?>>
             <span class="mif-ambulance icon"></span>
             <span class="caption">Anforderung speichern</span>
           </button>
         <?php endif; ?>
         <?php if (!is_null($patientendaten["TRANSPORTKATEGORIE"])): ?>
-          <button class="image-button success outline w-100" onclick="run_pat_transport_req(true);">
+          <button class="image-button success outline w-100" onclick="run_pat_transport_req(true);"
+            <?php if(!$has_write_access){echo "disabled";} ?>>
             <span class="mif-ambulance icon"></span>
             <span class="caption">Übergabe speichern</span>
           </button>

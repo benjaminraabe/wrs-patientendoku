@@ -5,10 +5,11 @@
     </div>
     <div class="cell pt-3 text-right">
       <span class="page-header-controls">
-        <button class="image-button success outline" onclick="update_pat_data();">
-          <span class="mif-floppy-disk icon"></span>
-          <span class="caption">Speichern</span>
-        </button>
+          <button class="image-button success outline" onclick="update_pat_data();"
+            <?php if(!$has_write_access){echo "disabled";} ?>>
+            <span class="mif-floppy-disk icon"></span>
+            <span class="caption">Speichern</span>
+          </button>
         <button class="image-button alert outline" onclick="history.back();">
           <span class="mif-cross icon"></span>
           <span class="caption">Abbrechen</span>

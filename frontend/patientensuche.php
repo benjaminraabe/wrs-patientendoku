@@ -5,10 +5,10 @@
   //    Berechtigung verändert werden - und die Nachträge werden gesondert
   //    im Patientenverlauf vermerkt.
 
-  
+
   include_once '../backend/sessionmanagement.php';
 
-  if ($_SESSION["CAN_SEARCH_PATIENTS"] != 1) {
+  if (!in_array("PERM_SEARCH_PATIENTS", $_SESSION["PERMISSIONS"], true)) {
     echo "Zugriff verweigert.";
     exit();
   }

@@ -10,7 +10,7 @@
 <?php
   # Vorhandene Nutzer und UHSen anzeigen.
   include_once '../backend/db.php';
-  $users = safeQuery($conn, "SELECT USERNAME, USER_ROLE FROM USER WHERE ACTIVE = 1 ORDER BY USERNAME;", []);
+  $users = safeQuery($conn, "SELECT USERNAME FROM USER WHERE ACTIVE = 1 ORDER BY USERNAME;", []);
   $uhs = safeQuery($conn, "SELECT * FROM UHS_DEFINITION ORDER BY NAME;", []);
 ?>
 
@@ -67,30 +67,13 @@
                   <!-- Auswahl der Benutzernamen in einer Select-Box. Aktivierbar in der Config. -->
                   <select class="" name="lg_username" data-role="select">
                     <?php
-                      # Sortiert die User-Accounts nach Gruppen und fügt sie in die entsprechende Opt-Group hinzu
-                      $roles = array("Arzt", "Sichter", "Monitor", "TEL", "Admin");
-                      $user_in_groups = array(array(),array(),array(),array(),array());
-
                       foreach ($users as $user) {
-                        foreach ($roles as $idx => $role) {
-                          if ($user["USER_ROLE"] == strtoupper($role)) {
-                            array_push($user_in_groups[$idx], $user);
-                          }
+                        // Wenn der Nutzer in der URL übergeben wurde, wird dieser ausgewählt
+                        $selected = '';
+                        if (isset($_GET["u"]) && ($user["USERNAME"] == $_GET["u"])) {
+                          $selected = 'selected';
                         }
-                      }
-
-                      foreach ($user_in_groups as $idx => $usergroup) {
-                        if (count($usergroup) == 0) {continue;}
-                        echo "<optgroup label='$roles[$idx]'>";
-                        foreach ($usergroup as $user) {
-                          // Wenn der Nutzer in der URL übergeben wurde, wird dieser ausgewählt
-                          $selected = '';
-                          if (isset($_GET["u"]) && ($user["USERNAME"] == $_GET["u"])) {
-                            $selected = 'selected';
-                          }
-                          echo "<option value='" . $user["USERNAME"] . "'".$selected.">" . $user["USERNAME"] . "</option>";
-                        }
-                        echo "</optgroup>";
+                        echo "<option value='" . $user["USERNAME"] . "'".$selected.">" . $user["USERNAME"] . "</option>";
                       }
 
                      ?>

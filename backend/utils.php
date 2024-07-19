@@ -103,4 +103,19 @@
     }
     return implode("\n", $changes);
   }
+
+
+  function safeCharsOnly($str){
+    $allowed = "ABCDEFGHIJKLMNOPQRSTUVWXYZÄÖÜabcdefghijklmnopqrstuvwxyzäöüß1234567890 +-_,.;:/&%!?()[]{}=#*~^°";
+    $allowed = str_split($allowed);
+    $str = str_split($str);
+
+    $newstr = "";
+    foreach ($str as $chr) {
+      if (in_array($chr, $allowed)) {
+        $newstr = $newstr.$chr;
+      }
+    }
+    return $newstr;
+  }
 ?>

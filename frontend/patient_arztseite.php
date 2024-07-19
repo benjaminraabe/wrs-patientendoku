@@ -3,12 +3,11 @@
   // Personalien und Vitalwerte können nicht gelesen oder verändert werden,
   //    stattdessen kann der Arzt eine Visite zum aktuellen Zeitpunkt dokumentieren.
 
-  
+
   include_once '../backend/sessionmanagement.php';
+  include_once '../backend/util_patientenverlauf.php';
 
-  $accessible_to = array("ARZT"); // Whitelist für Benutzerrollen
-
-  if (!in_array($_SESSION["USER_ROLE"], $accessible_to, true)) { // Aktiver strict-mode!
+  if (!in_array("PERM_ARZTVISITE", $_SESSION["PERMISSIONS"], true)) {
     echo "Zugriff verweigert.";
     exit();
   }
@@ -30,14 +29,11 @@
     $error = true;
     $error_msg = "Der Patient wurde nicht gefunden. Möglicherweise ist er noch nicht gesichtet worden?";
   }
+  // Arztvisite eintragen
   if(count($patientendaten) > 0) {
-    // Arztvisite eintragen
     $patientendaten = $patientendaten[0];
-
     $timediff = floor((strtotime(date("Y-m-d H:i:s")) - strtotime(($patientendaten["ZEIT_EINGANG"]))) / 60);
-    safeExecute($conn, "INSERT INTO PATIENTENVERLAUF(PATIENTEN_ID, USERNAME, EINTRAG)
-                        VALUES(?, ?, ?)",
-               [$pat_id, $_SESSION['USER_ID'], "Arztvisite nach ".$timediff." Minuten Wartezeit."]);
+    newArztvisite($conn, $pat_id, $_SESSION['USER_ID'], $timediff);
   }
 ?>
 

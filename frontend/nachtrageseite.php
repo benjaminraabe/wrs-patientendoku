@@ -6,8 +6,10 @@
 
   include_once '../backend/sessionmanagement.php';
 
-  if ($_SESSION["CAN_SEARCH_PATIENTS"] != 1) {
-    echo "Zugriff verweigert.";
+  if (!in_array("PERM_LATE_ENTER_PATIENTS", $_SESSION["PERMISSIONS"], true) &&
+      !in_array("PERM_WRITE_PATIENTS", $_SESSION["PERMISSIONS"], true) &&
+      !in_array("PERM_READ_PATIENTS", $_SESSION["PERMISSIONS"], true)) {
+    echo "Zugriff verweigert. Es fehlt die Berechtigung zum Nachtragen und/oder der Lese/Schreibzugriff.";
     exit();
   }
 ?>

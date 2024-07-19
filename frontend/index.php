@@ -6,9 +6,7 @@
 
   include_once '../backend/sessionmanagement.php';
 
-  $accessible_to = array("ADMIN", "TEL", "SICHTER", "ARZT"); // Whitelist für Benutzerrollen
-
-  if (!in_array($_SESSION["USER_ROLE"], $accessible_to, true)) { // Aktiver strict-mode!
+  if (count($_SESSION["PERMISSIONS"]) < 1) {
     echo "Zugriff verweigert.";
     exit();
   }
@@ -41,11 +39,19 @@
       <!-- Code scannen -->
       <div class="pl-5 mb-5">
         <h4>Patientenverwaltung</h4>
-        <a class="shortcut primary" href="barcodescan.php">
-          <span class="caption">Scannen</span>
-          <span class="mif-barcode icon"></span>
-        </a>
-        <?php if (in_array($_SESSION["USER_ROLE"], array("ADMIN", "SICHTER", "TEL"), true)): ?>
+        <?php if (in_array("PERM_READ_PATIENTS", $_SESSION["PERMISSIONS"], true)): ?>
+          <a class="shortcut primary" href="barcodescan.php">
+            <span class="caption">Scannen</span>
+            <span class="mif-barcode icon"></span>
+          </a>
+        <?php endif; ?>
+        <?php if (in_array("PERM_ARZTVISITE", $_SESSION["PERMISSIONS"], true)): ?>
+          <a class="shortcut primary" href="barcodescan.php?arzt">
+            <span class="caption">Arztvisite</span>
+            <span class="mif-stethoscope icon"></span>
+          </a>
+        <?php endif; ?>
+        <?php if (in_array("PERM_LIST_PATIENTS", $_SESSION["PERMISSIONS"], true)): ?>
           <a class="shortcut primary outline" href="patientenliste.php">
             <span class="caption">Pat. Liste</span>
             <span class="mif-list-numbered icon"></span>
@@ -56,22 +62,27 @@
       <!-- Öffentliche Tools -->
       <div class="pl-5 mb-5 pt-3">
         <h4>Statistiken</h4>
-        <a class="shortcut primary outline" href="monitor.php">
-          <span class="caption">Monitor</span>
-          <span class="mif-chart-bars icon"></span>
-        </a>
+        <?php if (in_array("PERM_PUBLIC_MONITOR", $_SESSION["PERMISSIONS"], true)): ?>
+          <a class="shortcut primary outline" href="monitor.php">
+            <span class="caption">Monitor</span>
+            <span class="mif-chart-bars icon"></span>
+          </a>
+        <?php endif; ?>
+
         <!-- Private Tools -->
-        <?php if (in_array($_SESSION["USER_ROLE"], array("ADMIN", "TEL"), true)): ?>
+        <?php if (in_array("PERM_GENERAL_STATISTICS", $_SESSION["PERMISSIONS"], true)): ?>
           <a class="shortcut primary outline" href="statistik.php">
             <span class="caption">Statistik</span>
             <span class="mif-document-file-pdf icon"></span>
           </a>
+        <?php endif; ?>
+        <?php if (in_array("PERM_TRANSPORT_STATISTICS", $_SESSION["PERMISSIONS"], true)): ?>
           <a class="shortcut primary outline" href="transportstatistik.php">
             <span class="caption">Transporte</span>
             <span class="mif-ambulance icon"></span>
           </a>
         <?php endif; ?>
-        <?php if (in_array($_SESSION["USER_ROLE"], array("ADMIN", "TEL", "SICHTER"), true)): ?>
+        <?php if (in_array("PERM_OPEN_TRANSPORT_MONITOR", $_SESSION["PERMISSIONS"], true)): ?>
           <a class="shortcut primary outline" href="offeneTransporte.php?lastQuittance=-1">
             <span class="caption">Anforderung</span>
             <span class="mif-chat icon"></span>
@@ -84,17 +95,16 @@
 
       <div class="pl-5 mb-5 pt-3">
         <h4>Werkzeuge</h4>
-        <?php if ($_SESSION["CAN_SEARCH_PATIENTS"] == 1): ?>
-        <a class="shortcut alert outline" href="patientensuche.php">
-          <span class="caption">Pat. Suche</span>
-          <span class="mif-search icon"></span>
-        </a>
+        <?php if (in_array("PERM_SEARCH_PATIENTS", $_SESSION["PERMISSIONS"], true)): ?>
+          <a class="shortcut alert outline" href="patientensuche.php">
+            <span class="caption">Pat. Suche</span>
+            <span class="mif-search icon"></span>
+          </a>
         <?php endif; ?>
         <!-- Nachtragezugang -->
-        <!-- Zugriff haben Sichter und Admin mit Sonderberechtigung. TEL ist ausgeschlossen, da diese nur Leseberechtigungen
-                am Patienten haben und das ein ganz unglückliches Durcheinander gibt. -->
-        <?php if (in_array($_SESSION["USER_ROLE"], array("SICHTER", "ADMIN"), true)): ?>
-          <?php if ($_SESSION["CAN_BACKDATE_PROTOCOL"] == 1): ?>
+        <!-- Berechtigungen zum Schreiben der Patienten und zum Nachtragen müssen vergeben sein, sonst entsteht Unsinn. -->
+        <?php if (in_array("PERM_LATE_ENTER_PATIENTS", $_SESSION["PERMISSIONS"], true)): ?>
+          <?php if (in_array("PERM_WRITE_PATIENTS", $_SESSION["PERMISSIONS"], true)): ?>
             <a class="shortcut alert outline" href="nachtrageseite.php">
               <span class="caption">Nachtragen</span>
               <span class="mif-alarm icon"></span>
@@ -102,10 +112,16 @@
           <?php endif; ?>
         <?php endif; ?>
         <!-- Admin-Werkzeuge -->
-        <?php if (in_array($_SESSION["USER_ROLE"], array("ADMIN"), true)): ?>
+        <?php if (in_array("PERM_USER_ADMINISTRATION", $_SESSION["PERMISSIONS"], true)): ?>
           <a class="shortcut alert outline"  href="adminpage.php">
             <span class="caption">Admin</span>
             <span class="mif-wrench icon"></span>
+          </a>
+        <?php endif; ?>
+        <?php if (in_array("PERM_PERMISSION_ADMINISTRATION", $_SESSION["PERMISSIONS"], true)): ?>
+          <a class="shortcut alert outline"  href="permissionpage.php">
+            <span class="caption">Rechte</span>
+            <span class="mif-database icon"></span>
           </a>
         <?php endif; ?>
       </div>

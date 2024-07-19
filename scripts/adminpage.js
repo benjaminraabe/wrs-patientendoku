@@ -1,99 +1,60 @@
 // Öffnet und Resettet den Dialog zum anlegen/modifizieren eines Benutzers.
-function openDlg(username, data, edit=true) {
-  document.getElementById('dlgTitle').textContent = (edit) ? "[" + username + "] bearbeiten" : "Neuer Benutzer"
+function openDlg(username, newUser=false) {
+  // Titel setzen
+  document.getElementById('dlgTitle').textContent = (newUser) ? "Neuer Benutzer"
+                                                              : "[" + username + "] bearbeiten"
 
-  // Form-Setup
-  if (edit) {
-    document.getElementById('formUsername').value = username
-    document.getElementById('formUsername').disabled = true
-    document.getElementById('formPassword').value = ''
-    document.getElementById('formActive').checked = (data.active == 1)
-    document.getElementById('formLateEdit').checked = (data.late_edit == 1)
-    document.getElementById('formPatSearch').checked = (data.pat_search == 1)
-    document.getElementById('formBackdate').checked = (data.backdate_protocol == 1)
+  // Reset Form
+  let form = document.getElementById('userForm').reset()
 
-    let roleSelect = Metro.getPlugin(document.getElementById('formRoleSelect'), 'select')
-    roleSelect.val([data.role])
+  // NewUser / EditUser
+  document.getElementsByName('bNewUser')[0].value = newUser
 
-    let uhsSelect = Metro.getPlugin(document.getElementById('formUhstSelect'), 'select')
-    uhsSelect.val([data.uhs])
+  // Wenn ein Benutzer bearbeitet wird, werden die entsprechenden Daten gesetzt
+  if (!newUser) {
+    // Username eintragen
+    document.getElementsByName('iUsername')[0].value = username
 
-    document.getElementById('formBtnEdit').style.display = 'inline-flex'
-    document.getElementById('formBtnNew').style.display = 'none'
-  } else {
-    document.getElementById('formUsername').value = ''
-    document.getElementById('formUsername').disabled = false
-    document.getElementById('formPassword').value = ''
-    document.getElementById('formActive').checked = true
-    document.getElementById('formLateEdit').checked = false
-    document.getElementById('formPatSearch').checked = false
-    document.getElementById('formBackdate').checked = false
+    // Benutzerrollen setzen
+    let checkedRoles = user_roles.filter((role) => role["USERNAME"] == username)
+                                 .map((el) => el["NAME"])
+    Array.from(document.getElementsByName('bUserrole[]'))
+      .filter((cb) => checkedRoles.includes(cb.dataset.caption))
+      .map((cb) => {cb.checked = true})
 
-    Metro.getPlugin(document.getElementById('formRoleSelect'), 'select').reset(true)
-    Metro.getPlugin(document.getElementById('formUhstSelect'), 'select').reset(true)
+    // UHS-Einschränkung setzen
+    let uhs = user_list.filter((role) => role["USERNAME"] == username)
+                       .reduce((_, el) => el["UHST_ID"], null)
+    document.getElementsByName('sUHS')[0].value = uhs ?? ""
 
-    document.getElementById('formBtnNew').style.display = 'inline-flex'
-    document.getElementById('formBtnEdit').style.display = 'none'
+    // Aktiv toggeln
+    let active = user_list.filter((role) => role["USERNAME"] == username)
+                          .reduce((_, el) => el["ACTIVE"], 1)
+    document.getElementsByName('bActive')[0].checked = (active === 1)
   }
 
+  // Show Dialog
+  document.getElementsByName('iUsername')[0].disabled = (!newUser);
   Metro.dialog.open("#editDialog");
 }
 
+function validateAndSend() {
+  let newUser = document.getElementsByName('bNewUser')[0].value == "true"
 
-// Versucht die Daten für einen neuen oder modifizierten Benutzer an den Server zu senden.
-function updateUserData(edit=true) {
-  let data = {}
-
-  // Differenzierer zwischen dem anlegen von neuen Usern und dem Verändern eines bestehenden Users
-  if (edit) {
-    data["MODIFY_USER"] = "1"
-  } else {
-    // Check UN and Password
-    data["NEW_USER"] = "1"
-    if ((document.getElementById('formUsername').value == '')
-        || (document.getElementById('formPassword').value == '') ) {
-          alert("Benutzername und Passwort dürfen nicht leer sein.")
-          return
+  if (newUser) {
+    if (document.getElementsByName('iUsername')[0].value == ''
+        || document.getElementsByName('iPassword')[0].value == ''){
+          alert("Username und Passwort müssen angegeben werden.")
+          return;
         }
   }
+  // Damit deaktivierte Checkboxen/Inputs beim Post trotzdem gesendet werden, müssen sie vorher aktiviert werden.
+  Array.from(document.getElementById('userForm').getElementsByTagName('input')).map((el) => el.disabled = false)
+  document.getElementsByName('iUsername')[0].disabled = false;
 
-  // Das neue Passwort wird nur mitgeschickt (ergo verändert), wenn es angegeben wird
-  if (document.getElementById('formUsername').value != '') {
-    data["PASSWORD"] = document.getElementById('formPassword').value
-  }
-
-  data["USERNAME"] = document.getElementById('formUsername').value
-  data["USER_ROLE"] = Metro.getPlugin(document.getElementById('formRoleSelect'), 'select').val()
-  data["UHST_ID"] = Metro.getPlugin(document.getElementById('formUhstSelect'), 'select').val()
-  data["ACTIVE"] = (document.getElementById('formActive').checked) ? 1 : 0
-  data["CAN_LATE_EDIT"] = (document.getElementById('formLateEdit').checked) ? 1 : 0
-  data["CAN_SEARCH_PATIENTS"] = (document.getElementById('formPatSearch').checked) ? 1 : 0
-  data["CAN_BACKDATE_PROTOCOL"] = (document.getElementById('formBackdate').checked) ? 1 : 0
-
-  fetch("../backend/process_admin_page.php", {
-    method: "POST",
-    headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json'},
-    body: JSON.stringify(data)
-  }).then(res => {
-    return res.text()
-  }).then(txt => {
-    // Check for Server-Side-Errors
-    if (txt.includes("Exception")) {
-      Metro.toast.create("Bei Speichern ist ein Fehler aufgetreten. Existiert der Benutzername bereits?", null, null, "alert", {showTop: true});
-      console.warn(txt);
-    } else if (txt.includes("Error")) {
-      Metro.toast.create(txt, null, null, "alert", {showTop: true});
-    } else {
-      Metro.toast.create("Daten gespeichert!", () => {window.location.reload();}, 500, "success", {showTop: true});
-    }
-  })
-  .catch(err => {
-    Metro.toast.create("Bei Speichern ist ein Fehler aufgetreten. (FETCH)", null, null, "alert", {showTop: true});
-    console.warn(err);
-  })
+  document.getElementById('userForm').submit()
 }
+
 
 
 // Versucht die aktualisierte Nachricht für den Monitor an den Server zu senden.

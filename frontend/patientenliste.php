@@ -7,9 +7,7 @@
 
   include_once '../backend/sessionmanagement.php';
 
-  $accessible_to = array("ADMIN", "SICHTER", "TEL"); // Whitelist für Benutzerrollen.
-
-  if (!in_array($_SESSION["USER_ROLE"], $accessible_to, true)) { // Aktiver strict-mode!
+  if (!in_array("PERM_LIST_PATIENTS", $_SESSION["PERMISSIONS"], true)) {
     echo "Zugriff verweigert.";
     exit();
   }
@@ -18,6 +16,8 @@
 <?php
   include_once '../backend/db.php';
   include_once '../backend/utils.php';
+  include_once '../backend/util_patientenverlauf.php';
+
   $patienten = safeQuery($conn, "SELECT p.SICHTUNGSKATEGORIE, p.ZEIT_EINGANG,  p.PATIENTEN_ID, p.PZC, pzc.DESCRIPTION, b.NAME, a.ARZTVISITE FROM PATIENTEN as p
                                   LEFT JOIN BEREICHE AS b
                                     on p.BEREICH_ID = b.BEREICH_ID
@@ -25,9 +25,7 @@
                                     on pzc.PZC = p.PZC
                                   LEFT JOIN (SELECT PATIENTEN_ID, TIMESTAMP AS ARZTVISITE
                                             FROM PATIENTENVERLAUF v
-                              		          LEFT JOIN USER u
-                              		            ON u.USERNAME = v.USERNAME
-                                        		WHERE USER_ROLE = 'ARZT'
+                                        		WHERE ART = ".ENTY_TYPE_ARZTVISITE."
                                         		GROUP BY PATIENTEN_ID) AS a
                               	    on a.PATIENTEN_ID = p.PATIENTEN_ID
                                   WHERE ((b.UHST_ID = ? OR NULL <=> ?) OR p.BEREICH_ID IS NULL) AND p.Aktiv = 1

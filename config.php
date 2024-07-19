@@ -20,4 +20,7 @@
   //    kann es hier aktiviert werden.
   $SHOW_USERNAMES_ON_LOGIN = False;
 
+  // Session-Lifetime in Sekunden.
+  //    Standardmäßig auf 12 Stunden gesetzt
+  $CST_SESSION_LIFETIME = 12 * 60 * 60;
  ?>

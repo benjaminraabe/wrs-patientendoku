@@ -5,12 +5,10 @@
   //    Login eingeschränkt werden.
   // Um diese Dateneinschränkung abzubilden sind die Queries teils etwas länger...
 
-  
+
   include_once '../backend/sessionmanagement.php';
 
-  $accessible_to = array("ADMIN", "TEL", "SICHTER", "ARZT", "MONITOR"); // Whitelist für Benutzerrollen
-
-  if (!in_array($_SESSION["USER_ROLE"], $accessible_to, true)) { // Aktiver strict-mode!
+  if (!in_array("PERM_PUBLIC_MONITOR", $_SESSION["PERMISSIONS"], true)) {
     echo "Zugriff verweigert.";
     exit();
   }

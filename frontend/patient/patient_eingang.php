@@ -95,7 +95,8 @@
 
 <!-- Zeiten nachtragen -->
 <?php if (($patientendaten["AKTIV"] == 0)
-          && ($_SESSION["CAN_BACKDATE_PROTOCOL"] == 1 || $_SESSION["CAN_LATE_EDIT"] == 1)): ?>
+          && (in_array("PERM_LATE_ENTER_PATIENTS", $_SESSION["PERMISSIONS"], true) ||
+              in_array("PERM_CHANGE_ARCHIVED_PATIENT_DATA", $_SESSION["PERMISSIONS"], true))):?>
 <div class="pl-4 pr-4 mt-3">
   <button class="button alert outline" onclick="openTimeEditDlg();">Zeiten editieren</button>
 </div>

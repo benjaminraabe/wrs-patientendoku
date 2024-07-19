@@ -6,7 +6,7 @@
     $is_new = false;
     $pat_id = $_GET["nachtrPatID"];
     // Sonderberechtigung prüfen
-    if ($_SESSION["CAN_BACKDATE_PROTOCOL"] != 1) {
+    if (!in_array("PERM_LATE_ENTER_PATIENTS", $_SESSION["PERMISSIONS"], true)) {
       exit("Keine Nachtrageberechtigung. Der Vorfall wurde gemeldet.");
     }
 
@@ -14,7 +14,7 @@
     $patientencheck = safeQuery($conn, "SELECT * FROM PATIENTEN p WHERE PATIENTEN_ID = ?;",
                                [$pat_id]);
     if (count($patientencheck) > 0) {
-      exit("Ein Patient mit dieser Nummer existiert bereits. Bitte die reguläre Patientenansicht nutzen.");
+      exit("Ein Patient mit dieser Nummer existiert bereits. Bitte die reguläre Patientenansicht verwenden.");
     }
 
     // Patient mit Rückdatierter Eingangszeitstempel anlegen.

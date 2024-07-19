@@ -119,21 +119,76 @@ CREATE TABLE `PZC` (
   CONSTRAINT `PZC_FK` FOREIGN KEY (`PZC_CAT_ID`) REFERENCES `PZC_CATEGORIES` (`CAT_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
-
+-- Benutzerverwaltung, Berechtigungen
 CREATE TABLE `USER` (
   `USERNAME` varchar(100) NOT NULL,
   `PW_HASH` varchar(1000) NOT NULL,
   `UHST_ID` int(11) DEFAULT NULL COMMENT 'ID der UHS der der User zugeordnet ist. ''Null'' hat Zugriff auf die Daten aller UHST.',
   `ACTIVE` tinyint(1) NOT NULL DEFAULT 1 COMMENT 'User kann deaktiviert werden. Referenzen auf diesen Account bleiben erhalten, der Zugriff wird aber verhindert.',
-  `USER_ROLE` varchar(100) NOT NULL DEFAULT '' COMMENT 'Benutzerrolle des Users. Bestimmt welche Seiten er einsehen/verwenden kann. Dokumentation konsultieren!',
-  `CAN_LATE_EDIT` tinyint(1) NOT NULL DEFAULT 0 COMMENT 'Regelt Berechtigungen für den Nachtragezugang. Bei TRUE darf der User Daten nachtragen.',
-  `CAN_SEARCH_PATIENTS` tinyint(1) NOT NULL DEFAULT 0 COMMENT 'Berechtigung um die Patientensuche aufzurufen.',
-  `CAN_BACKDATE_PROTOCOL` tinyint(1) NOT NULL DEFAULT 0 COMMENT 'Berechtigung um den Nachtragezugang (Protokolle mit anderem Start/Endzeit) einzupflegen.',
   PRIMARY KEY (`USERNAME`),
   KEY `user_FK` (`UHST_ID`),
   CONSTRAINT `user_FK` FOREIGN KEY (`UHST_ID`) REFERENCES `UHS_DEFINITION` (`UHST_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+CREATE TABLE `USER_ROLES` (
+	`ROLE_ID` INT auto_increment NOT NULL COMMENT 'Unique-ID der Benutzerrolle',
+	`NAME` varchar(100) NOT NULL COMMENT 'Menschenlesbare Bezeichnung der Benutzerrolle',
+	`DESCRIPTION` varchar(500) NULL COMMENT '(Optional) Kurze Beschreibung der Benutzerrolle.',
+  `IS_EDITABLE` tinyint(1) NOT NULL DEFAULT 1 COMMENT 'Gibt an, ob die Berechtigung im User-Interface geändert werden darf. Wird initial nur dafür verwendet um die Standard-SU-Berechtigung auszublenden.',
+	CONSTRAINT `USER_ROLES_PK` PRIMARY KEY (`ROLE_ID`),
+	CONSTRAINT `USER_ROLES_UNIQUE` UNIQUE KEY (`NAME`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+CREATE TABLE `PERMISSIONS` (
+	`PERMISSION_ID` INT auto_increment NOT NULL COMMENT 'Unique ID der Berechtigung.',
+	`NAME` varchar(100) NOT NULL COMMENT 'Eindeutiger Name der Berechtigung',
+	`DESCRIPTION` varchar(300) NOT NULL COMMENT 'Beschreibung der Berechtigung',
+	CONSTRAINT `PERMISSIONS_PK` PRIMARY KEY (`PERMISSION_ID`),
+	CONSTRAINT `PERMISSIONS_UNIQUE` UNIQUE KEY (`NAME`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+CREATE TABLE `USER_X_ROLES` (
+	`USERNAME` varchar(100) NOT NULL COMMENT 'Benutzername, dem die Benutzerrolle zugeordnet werden soll.',
+	`ROLE_ID` INT NOT NULL COMMENT 'ID der zugeordneten Rolle',
+	CONSTRAINT `USER_X_ROLES_PK` PRIMARY KEY (`USERNAME`,`ROLE_ID`),
+	CONSTRAINT `USER_X_ROLES_USER_FK` FOREIGN KEY (`USERNAME`) REFERENCES `USER`(`USERNAME`),
+	CONSTRAINT `USER_X_ROLES_USER_ROLES_FK` FOREIGN KEY (`ROLE_ID`) REFERENCES `USER_ROLES`(`ROLE_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+CREATE TABLE `ROLES_X_PERMISSIONS` (
+  `ROLE_ID` INT NOT NULL COMMENT 'ID der Benutzerrolle',
+  `PERMISSION_ID` INT NOT NULL COMMENT 'ID der zugeordneten Berechtigung',
+	CONSTRAINT `ROLES_X_PERMISSIONS_PK` PRIMARY KEY (`PERMISSION_ID`,`ROLE_ID`),
+  CONSTRAINT `ROLES_X_PERMISSIONS_USER_ROLES_FK` FOREIGN KEY (`ROLE_ID`) REFERENCES `USER_ROLES`(`ROLE_ID`),
+  CONSTRAINT `ROLES_X_PERMISSIONS_PERMISSIONS_FK` FOREIGN KEY (`PERMISSION_ID`) REFERENCES `PERMISSIONS`(`PERMISSION_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+
+
 -- Default-Zugang und Monitor-Nachricht
-INSERT INTO MONITOR_STRINGS (ITEM) VALUES('');
-INSERT INTO `USER` (USERNAME,PW_HASH,UHST_ID,ACTIVE,USER_ROLE,CAN_LATE_EDIT,CAN_SEARCH_PATIENTS,CAN_BACKDATE_PROTOCOL) VALUES ('ENTFERN_MICH_ADMIN','$2y$10$0k1PNfCRF0jaMiTJS7mcuOcgwVHVg3QmaNuxa5AbV2HobroA6u3Fm',NULL,1,'ADMIN',1,1,1);
+INSERT INTO `MONITOR_STRINGS` (ITEM) VALUES('');
+INSERT INTO `USER` (USERNAME,PW_HASH,UHST_ID,ACTIVE) VALUES ('DEAKTIVIER_MICH_ADMIN','$2y$10$0k1PNfCRF0jaMiTJS7mcuOcgwVHVg3QmaNuxa5AbV2HobroA6u3Fm',NULL,1);
+
+-- Default-Konfiguration der Benutzerrollen und Berechtigungen
+INSERT INTO `PERMISSIONS` (NAME,DESCRIPTION) VALUES
+	 ('PERM_PERMISSION_ADMINISTRATION','Berechtigung zur Verwaltung von Berechtigungen'),
+	 ('PERM_USER_ADMINISTRATION','Berechtigung zur Verwaltung von Benutzerkonten'),
+	 ('PERM_ARZTVISITE','Berechtigung zum Eintragen von Arztvisiten'),
+	 ('PERM_READ_PATIENTS','Lesezugriff auf Patientendaten'),
+	 ('PERM_WRITE_PATIENTS','Schreibzugriff auf Patientendaten'),
+	 ('PERM_LIST_PATIENTS','Zugriff auf die Patientenliste / Übersicht von aktiven Patienten ohne Personendaten'),
+	 ('PERM_SEARCH_PATIENTS','Zugriff auf die Patientensuche, inklusive Personendaten'),
+	 ('PERM_CHANGE_ARCHIVED_PATIENT_DATA','Zugriff auf den Korrekturzugang (nachträgliche Datenänderung bei entlassenen Patienten)'),
+	 ('PERM_LATE_ENTER_PATIENTS','Zugriff auf den Nachtragezugang (Rückdatierung von Patientenprotokollen)'),
+	 ('PERM_PUBLIC_MONITOR','Zugriff auf den öffentlichen Auslastungsmonitor'),
+	 ('PERM_GENERAL_STATISTICS','Zugriff auf die umfangreichen Statistiken zu Patienten'),
+	 ('PERM_TRANSPORT_STATISTICS','Zugriff auf die Übersicht bisheriger Transporte'),
+	 ('PERM_OPEN_TRANSPORT_MONITOR','Zugriff auf aktuell offene Transportanforderungen');
+
+ INSERT INTO `USER_ROLES` (NAME,DESCRIPTION,IS_EDITABLE) VALUES
+ 	 ('Super-User', 'Vollzugriff', 0);
+ INSERT INTO `ROLES_X_PERMISSIONS` (ROLE_ID, PERMISSION_ID) VALUES
+ 	 (1,1), (1,2), (1,3), (1,4), (1,5),
+ 	 (1,6), (1,7), (1,8), (1,9), (1,10),
+ 	 (1,11), (1,12), (1,13);
+ INSERT INTO `USER_X_ROLES` (USERNAME,ROLE_ID) VALUES ('DEAKTIVIER_MICH_ADMIN',1);

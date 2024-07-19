@@ -5,11 +5,12 @@
 
   include_once '../backend/sessionmanagement.php';
 
-  $accessible_to = array("ADMIN", "TEL", "SICHTER"); // Whitelist für Benutzerrollen
-  if (!in_array($_SESSION["USER_ROLE"], $accessible_to, true)) { // Aktiver strict-mode!
+  if (!in_array("PERM_READ_PATIENTS", $_SESSION["PERMISSIONS"], true)) {
     echo "Zugriff verweigert.";
     exit();
   }
+  $has_write_access = in_array("PERM_WRITE_PATIENTS", $_SESSION["PERMISSIONS"], true);
+  $has_lateedit_access = in_array("PERM_LATE_ENTER_PATIENTS", $_SESSION["PERMISSIONS"], true);
 ?>
 
 
@@ -58,13 +59,13 @@
         <div class="tab-box p-4">
           <div class="tab-navigation pl-4">
             <button class="tab-button active" onclick="openTab('#tab-eingang', this)">
-              [F1] Eingang</button>
+              Eingang</button>
             <button class="tab-button" onclick="openTab('#tab-daten', this)">
-              [F2] Patientendaten</button>
+              Patientendaten</button>
             <button class="tab-button" onclick="openTab('#tab-verlauf', this)">
-              [F3] Verlauf</button>
+              Verlauf</button>
             <button class="tab-button" onclick="openExitPage(); openTab('#tab-ausgang', this)">
-              [F4] Transport / Ausgang</button>
+              Transport / Ausgang</button>
           </div>
 
           <div class="tab-wrapper">

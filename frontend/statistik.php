@@ -6,9 +6,7 @@
 
   include_once '../backend/sessionmanagement.php';
 
-  $accessible_to = array("ADMIN", "TEL"); // Whitelist für Benutzerrollen.
-
-  if (!in_array($_SESSION["USER_ROLE"], $accessible_to, true)) { // Aktiver strict-mode!
+  if (!in_array("PERM_GENERAL_STATISTICS", $_SESSION["PERMISSIONS"], true)) {
     echo "Zugriff verweigert.";
     exit();
   }

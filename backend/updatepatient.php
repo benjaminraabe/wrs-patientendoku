@@ -6,16 +6,12 @@
 
   include_once '../backend/sessionmanagement.php';
 
-  $accessible_to = array("ADMIN", "SICHTER"); // Whitelist für Benutzerrollen
-
-  if (!in_array($_SESSION["USER_ROLE"], $accessible_to, true)) { // Aktiver strict-mode!
-    echo "Error: Zugriff verweigert.";
+  if (!in_array("PERM_WRITE_PATIENTS", $_SESSION["PERMISSIONS"], true)) {
+    echo "Zugriff verweigert.";
     exit();
   }
-?>
 
-
-<?php
+  
   include_once 'db.php';
   $late_edit = false;
   $postdata = json_decode(file_get_contents('php://input'), true);
@@ -34,7 +30,9 @@
     // Änderungen in der Eingangszeit setzen
     if (array_key_exists("EINGANG_TIMESTAMP", $postdata)) {
       // User ist berechtigt die Zeit zu verändern
-      if (($patientendaten["AKTIV"] == 0) && ($_SESSION["CAN_BACKDATE_PROTOCOL"] == 1 || $_SESSION["CAN_LATE_EDIT"] == 1)) {
+      if (($patientendaten["AKTIV"] == 0)
+          && (in_array("PERM_LATE_ENTER_PATIENTS", $_SESSION["PERMISSIONS"], true) ||
+              in_array("PERM_CHANGE_ARCHIVED_PATIENT_DATA", $_SESSION["PERMISSIONS"], true))) {
         $e_timestamp = trim($postdata["EINGANG_TIMESTAMP"]);
         // Eingangszeit darf nicht leer sein
         if ($e_timestamp != '') {
@@ -61,7 +59,9 @@
     // Änderungen in der Ausgangszeit setzen
     if (array_key_exists("AUSGANG_TIMESTAMP", $postdata)) {
       // User ist berechtigt die Zeit zu verändern
-      if (($patientendaten["AKTIV"] == 0) && ($_SESSION["CAN_BACKDATE_PROTOCOL"] == 1 || $_SESSION["CAN_LATE_EDIT"] == 1)) {
+      if (($patientendaten["AKTIV"] == 0)
+          && (in_array("PERM_LATE_ENTER_PATIENTS", $_SESSION["PERMISSIONS"], true) ||
+              in_array("PERM_CHANGE_ARCHIVED_PATIENT_DATA", $_SESSION["PERMISSIONS"], true))) {
         $a_timestamp = trim($postdata["AUSGANG_TIMESTAMP"]);
         // Eingangszeit darf nicht leer sein
         if ($a_timestamp != '') {
@@ -112,7 +112,7 @@
 
 
   if ($oldDaten["AKTIV"] != 1) {
-    if ($_SESSION["CAN_LATE_EDIT"] == 1) {
+    if (in_array("PERM_LATE_ENTER_PATIENTS", $_SESSION["PERMISSIONS"], true)) {
       $late_edit = true;
     } else {
       exit("Error: Benutzer ist nicht dazu berechtigt Datensätze nachträglich zu editieren.");
