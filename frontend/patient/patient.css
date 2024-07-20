@@ -146,7 +146,7 @@
 .tab-button {
   border: none;
   border: 1px solid lightgray;
-  border-bottom: none;
+  border-bottom: 1px solid #999999;
   background-color: #fff;
   color: rgba(0, 0, 0, 0.4);
   padding: 10px;
