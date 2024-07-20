@@ -16,7 +16,7 @@
 <?php
   include '../backend/db.php';
 
-  $pat_id = $_GET["id"];
+  $pat_id = safeCharsOnly($_GET["id"] ?? "");
   $error = false;
   $error_msg = "";
 
