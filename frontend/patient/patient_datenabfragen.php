@@ -4,7 +4,7 @@
   // Wechselnde Anlegeoperation - je nach normaler Ansicht oder Nachtrageansicht
   if (isset($_GET["nachtrPatID"])) {
     $is_new = false;
-    $pat_id = $_GET["nachtrPatID"];
+    $pat_id = safeCharsOnly($_GET["nachtrPatID"] ?? "");
     // Sonderberechtigung prüfen
     if (!in_array("PERM_LATE_ENTER_PATIENTS", $_SESSION["PERMISSIONS"], true)) {
       exit("Keine Nachtrageberechtigung. Der Vorfall wurde gemeldet.");
@@ -37,7 +37,7 @@
 
   } else {
     // "Normaler Aufruf der Patientenseite"
-    $pat_id = $_GET["id"];
+    $pat_id = safeCharsOnly($_GET["id"] ?? "");
     $is_new = false;
 
     $patientendaten = safeQuery($conn, "SELECT * FROM PATIENTEN p

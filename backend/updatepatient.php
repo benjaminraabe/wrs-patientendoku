@@ -11,12 +11,13 @@
     exit();
   }
 
-  
+
   include_once 'db.php';
   $late_edit = false;
   $postdata = json_decode(file_get_contents('php://input'), true);
 
   $patientendaten = $postdata["patient"];
+  $patientendaten["PATIENTEN_ID"] = safeCharsOnly($patientendaten["PATIENTEN_ID"] ?? "");
 
   // Bisheriger Datenstand wird abgerufen um herauszufinden was geändert wurde
   $oldDaten = safeQuery($conn, "SELECT * FROM PATIENTEN WHERE PATIENTEN_ID = ?", [$patientendaten["PATIENTEN_ID"]]);
