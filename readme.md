@@ -45,7 +45,10 @@ Projektmanagement durch Sebastian Rappmann.
 
  - Personalisierte Links für Benutzer können erstellt werden, indem an die URL der Login-Seite der GET-Parameter ```&u=``` angehängt wird. Der übergebene Benutzername wird automatisch ausgewählt, so dass der User nur noch sein Passwort eingeben muss. Beispiel: ```../frontend/login.php?u=DemoAdmin``` wählt automatisch den Benutzer "DemoAdmin" aus.
 
- - Dokumentation via GitHub-Wiki folgt.
+ - Die Lebenszeit einer Session wird standardmäßig auf 12 Stunden gesetzt, das kann aber in der Konfiguration angepasst werden, indem der Wert für ```$CST_SESSION_LIFETIME``` auf den gewünschten Wert (in Sekunden) gesetzt wird.
+
+ - Benutzernamen werden standardmäßig nicht mehr bei der Loginseite zur Auswahl angezeigt. Soll das Feature reaktiviert werden, kann der Wert für ```$SHOW_USERNAMES_ON_LOGIN``` in der Konfiguration auf ```True``` gesetzt werden. \\
+ Das wird normalerweise nicht empfohlen, weil es alle hinterlegten Benutzernamen preisgibt - bevor es aktiviert wird, sollte man sich also Gedanken über die Auswirkungen auf die Anwendungssicherheit machen.
 
 
 
