@@ -39,4 +39,20 @@
     exit();
   }
 
+  // Aktualisiert die vergebenen Berechtigungen für einen Benutzer
+  //    Das führt dazu, dass neu vergebenen oder entfernte Berechtigungen auch ohne ein neues
+  //    Login wirksam werden.
+  try {
+    $permissiondata = safeQuery($conn, "SELECT DISTINCT p.NAME from USER_X_ROLES rx
+                                        LEFT JOIN ROLES_X_PERMISSIONS px on rx.ROLE_ID = px.ROLE_ID
+                                        LEFT JOIN PERMISSIONS p on px.PERMISSION_ID = p.PERMISSION_ID
+                                        WHERE USERNAME = ?", [$_SESSION['USER_ID']]);
+    $permissiondata = array_map(fn($p) => $p["NAME"], $permissiondata);
+    $_SESSION['PERMISSIONS'] = $permissiondata;
+  } catch (\Exception $e) {
+    session_unset();
+    session_destroy();
+    header('Location: login.php?errmsg=dberror');
+    exit();
+  }
  ?>
