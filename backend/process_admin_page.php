@@ -151,7 +151,7 @@
     //    Fremdschlüsselproblemen kommt.
     safeExecute($conn, "UPDATE USER SET UHST_ID = ?, ACTIVE = ? WHERE USERNAME = ?", [
                                       (($_POST["sUHS"] != "") ? $_POST["sUHS"] : NULL),
-                                      array_key_exists("bActive", $_POST),
+                                      array_key_exists("bActive", $_POST) ? 1:0,
                                       $_POST["iUsername"]
                                     ]);
 
