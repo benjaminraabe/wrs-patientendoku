@@ -9,7 +9,10 @@
     exit();
   }
 
-
+  // Die Verarbeitungsformen in diesem File sind geteilt, der Monitor nutzt (noch) ein JSON-Request,
+  //    und verarbeitet die Rückgabe Client-seitig. Die Benutzerverwaltung läuft mittlerweile
+  //    über HTML-Forms und wird deshalb aus $_POST geladen.
+  // Die Teilung ist historisch und wird irgendwann überarbeitet - gerade fehlt mir dazu leider die Kapazität.
   include_once 'db.php';
   $postdata = json_decode(file_get_contents('php://input'), true);
 
@@ -67,7 +70,7 @@
                                       $_POST["iUsername"],
                                       password_hash($_POST["iPassword"], PASSWORD_DEFAULT),
                                       (($_POST["sUHS"] != "") ? $_POST["sUHS"] : NULL),
-                                      array_key_exists("bActive", $_POST)
+                                      array_key_exists("bActive", $_POST) ? 1:0
                                     ]);
 
     // Rollen werden angelegt.
