@@ -243,12 +243,12 @@
         <div class="grid pr-5 pl-5 mb-8 patliste-liste rkish-table">
           <div class="row header-row fg-light" style="background-color: #024ea4;">
             <div class="cell text-center"></div>
-            <div class="cell text-center"><b>&Sigma;</b></div>
-            <div class="cell text-center"><b>Sofort</b></div>
-            <div class="cell text-center"><b>Sehr Dringend</b></div>
-            <div class="cell text-center"><b>Dringend</b></div>
-            <div class="cell text-center"><b>Normal</b></div>
-            <div class="cell text-center"><b>Nicht Dringend</b></div>
+            <div class="cell text-center pt-4"><b>&Sigma;</b></div>
+            <div class="cell text-center"><b>Sofort</b> <br><small>SK1</small></div>
+            <div class="cell text-center"><b>Sehr Dringend</b> <br><small>SK1</small></div>
+            <div class="cell text-center"><b>Dringend</b> <br><small>SK2</small></div>
+            <div class="cell text-center"><b>Normal</b> <br><small>SK3</small></div>
+            <div class="cell text-center"><b>Nicht Dringend</b> <br><small>SK3</small></div>
           </div>
           <div class="row data-row">
             <div class="cell text-center vert-center"><b>Gesamt</b></div>
@@ -277,12 +277,12 @@
         <div class="grid pr-5 pl-5 mb-8 patliste-liste rkish-table">
           <div class="row header-row fg-light" style="background-color: #024ea4;">
             <div class="cell text-center"></div>
-            <div class="cell text-center"><b>&Sigma;</b></div>
-            <div class="cell text-center"><b>Sofort</b></div>
-            <div class="cell text-center"><b>Sehr Dringend</b></div>
-            <div class="cell text-center"><b>Dringend</b></div>
-            <div class="cell text-center"><b>Normal</b></div>
-            <div class="cell text-center"><b>Nicht Dringend</b></div>
+            <div class="cell text-center pt-4"><b>&Sigma;</b></div>
+            <div class="cell text-center"><b>Sofort</b> <br><small>SK1</small></div>
+            <div class="cell text-center"><b>Sehr Dringend</b> <br><small>SK1</small></div>
+            <div class="cell text-center"><b>Dringend</b> <br><small>SK2</small></div>
+            <div class="cell text-center"><b>Normal</b> <br><small>SK3</small></div>
+            <div class="cell text-center"><b>Nicht Dringend</b> <br><small>SK3</small></div>
           </div>
           <div class="row data-row">
             <div class="cell text-center vert-center"><b>Gesamt</b></div>
