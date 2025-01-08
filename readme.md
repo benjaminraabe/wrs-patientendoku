@@ -10,13 +10,14 @@ Die Software ist primär auf die Bedürfnisse des Wacken:Rescue:Squad ausgelegt 
 
 ## Lizenz
 
-Lizensiert als [CreativeCommons Attribution-ShareAlike 4.0](https://creativecommons.org/licenses/by-sa/4.0/).
+Lizensiert unter [AGPL v3](https://www.gnu.org/licenses/agpl-3.0.txt).
 
 Ausgeschlossen davon ist die Verwendung des W:R:S-Logos (```images/background.png```). Es wird empfohlen, dieses durch das Logo der eigenen Organisation mit einer Deckkraft von ca. 20% zu ersetzen.
 
 Die Software wird mit den JS-Bibliotheken [MetroUI-CSS (MIT-Lizenz)](https://github.com/olton/Metro-UI-CSS), sowie [plotly.js (MIT-Lizenz)](https://github.com/plotly/plotly.js/) und [zxing-js (Apache 2.0 Lizenz)](https://github.com/zxing-js/library) ausgeliefert.
 
 Projektmanagement durch Sebastian Rappmann.
+
 
 
 
