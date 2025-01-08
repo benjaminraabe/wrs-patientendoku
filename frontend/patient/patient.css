@@ -56,7 +56,7 @@
 .verlauf > .row:last-of-type {
   border-bottom: none;
 }
-.verlauf > .row > .cell {
+.pre {
   white-space: pre-line;
 }
 .verlauf > .row > .cell:first-of-type {

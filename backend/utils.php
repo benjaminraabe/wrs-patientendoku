@@ -90,6 +90,11 @@
   //    einen String mit den Änderungen.
   function inputDiff($oldData, $newData) {
     $changes = array();
+    // Verhindert wiederholte Änderungsvermerke, wenn bereits HTML-Chars eingefügt wurden.
+    //  Diese werden in der SafeInsert-Funktion escaped und müssen zum Vergleich zurückkonvertiert werden.
+    $oldData = array_map('htmlspecialchars_decode', $oldData);
+    $newData = array_map('htmlspecialchars_decode', $newData);
+
     foreach ($newData as $key => $value) {
       if(array_key_exists($key, $oldData)) {
         // Sonderfall Geburtsdatum: Standardwert aus der DB abfangen

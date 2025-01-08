@@ -90,7 +90,7 @@
         <!-- Patienten werden nach ihrer Nummer sortiert aufgelistet -->
         <?php if (count($patienten) > 0) : ?>
           <?php foreach ($patienten as $pat) :?>
-
+            
             <div class="row data-row pt-2 pb-2" onclick="window.location.href = 'patient.php?id=<?php echo $pat["ID"] ?>'">
               <div class="cell-2 text-center" style="line-height: 3em;"><?php echo $pat["ID"]; ?></div>
               <div class="cell-2" lang="de">

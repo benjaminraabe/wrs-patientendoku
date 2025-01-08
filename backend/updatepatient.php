@@ -5,6 +5,7 @@
 
 
   include_once '../backend/sessionmanagement.php';
+  include_once '../backend/util_patientenverlauf.php';
 
   if (!in_array("PERM_WRITE_PATIENTS", $_SESSION["PERMISSIONS"], true)) {
     echo "Zugriff verweigert.";
@@ -13,7 +14,6 @@
 
 
   include_once 'db.php';
-  $late_edit = false;
   $postdata = json_decode(file_get_contents('php://input'), true);
 
   $patientendaten = $postdata["patient"];
@@ -28,65 +28,58 @@
     exit("Error: Der Patient wurde anscheinend noch nicht angelegt.");
   }
 
-    // Änderungen in der Eingangszeit setzen
-    if (array_key_exists("EINGANG_TIMESTAMP", $postdata)) {
-      // User ist berechtigt die Zeit zu verändern
-      if (($patientendaten["AKTIV"] == 0)
-          && (in_array("PERM_LATE_ENTER_PATIENTS", $_SESSION["PERMISSIONS"], true) ||
-              in_array("PERM_CHANGE_ARCHIVED_PATIENT_DATA", $_SESSION["PERMISSIONS"], true))) {
-        $e_timestamp = trim($postdata["EINGANG_TIMESTAMP"]);
-        // Eingangszeit darf nicht leer sein
-        if ($e_timestamp != '') {
-          $e_timestamp = date("Y-m-d H:i:s", strtotime($e_timestamp));
-          $old_e_timestamp = date("Y-m-d H:i:s", strtotime($oldDaten["ZEIT_EINGANG"]));
-          // Eingangszeit weicht von bekannter Zeit ab
-          if ($e_timestamp != $old_e_timestamp) {
-            try {
-              safeExecute($conn, "UPDATE PATIENTEN SET ZEIT_EINGANG = ? WHERE PATIENTEN_ID = ?;", [$e_timestamp, $patientendaten["PATIENTEN_ID"]]);
-              safeExecute($conn, "INSERT INTO PATIENTENVERLAUF(PATIENTEN_ID, USERNAME, EINTRAG)
-                VALUES(?, ?, CONCAT(\"<span style='color: red;'>Eingangszeit verändert:</span><br>\", ?));",
-                [$patientendaten["PATIENTEN_ID"],
-                $_SESSION['USER_ID'],
-                $old_e_timestamp . " => " . $e_timestamp
-              ]);
-            } catch (\Exception $e) {}
-          }
+
+  // Änderungen in der Eingangszeit setzen
+  if (array_key_exists("EINGANG_TIMESTAMP", $postdata)) {
+    // User ist berechtigt die Zeit zu verändern
+    if (($oldDaten["AKTIV"] == 0)
+        && (in_array("PERM_LATE_ENTER_PATIENTS", $_SESSION["PERMISSIONS"], true) ||
+            in_array("PERM_CHANGE_ARCHIVED_PATIENT_DATA", $_SESSION["PERMISSIONS"], true))) {
+      $e_timestamp = trim($postdata["EINGANG_TIMESTAMP"]);
+      // Eingangszeit darf nicht leer sein
+      if ($e_timestamp != '') {
+        $e_timestamp = date("Y-m-d H:i:s", strtotime($e_timestamp));
+        $old_e_timestamp = date("Y-m-d H:i:s", strtotime($oldDaten["ZEIT_EINGANG"]));
+        // Eingangszeit weicht von bekannter Zeit ab
+        if ($e_timestamp != $old_e_timestamp) {
+          try {
+            safeExecute($conn, "UPDATE PATIENTEN SET ZEIT_EINGANG = ? WHERE PATIENTEN_ID = ?;", [$e_timestamp, $patientendaten["PATIENTEN_ID"]]);
+            nachtragEingangszeit($conn, $patientendaten["PATIENTEN_ID"], $_SESSION['USER_ID'],
+                                 $old_e_timestamp, $e_timestamp);
+          } catch (\Exception $e) {}
         }
-      } else {
-        exit("Error: Berechtigungen für Zeitänderung nicht erteilt oder Patient ist noch aktiv.");
       }
+    } else {
+      exit("Error: Berechtigungen für Zeitänderung nicht erteilt oder Patient ist noch aktiv.");
     }
+  }
 
-    // Änderungen in der Ausgangszeit setzen
-    if (array_key_exists("AUSGANG_TIMESTAMP", $postdata)) {
-      // User ist berechtigt die Zeit zu verändern
-      if (($patientendaten["AKTIV"] == 0)
-          && (in_array("PERM_LATE_ENTER_PATIENTS", $_SESSION["PERMISSIONS"], true) ||
-              in_array("PERM_CHANGE_ARCHIVED_PATIENT_DATA", $_SESSION["PERMISSIONS"], true))) {
-        $a_timestamp = trim($postdata["AUSGANG_TIMESTAMP"]);
-        // Eingangszeit darf nicht leer sein
-        if ($a_timestamp != '') {
-          $a_timestamp = date("Y-m-d H:i:s", strtotime($a_timestamp));
-          $old_a_timestamp = date("Y-m-d H:i:s", strtotime($oldDaten["ZEIT_ENTLASSUNG"]));
-          // Eingangszeit weicht von bekannter Zeit ab
-          if ($a_timestamp != $old_a_timestamp) {
-            try {
-              safeExecute($conn, "UPDATE PATIENTEN SET ZEIT_ENTLASSUNG = ? WHERE PATIENTEN_ID = ?;", [$a_timestamp, $patientendaten["PATIENTEN_ID"]]);
-              safeExecute($conn, "INSERT INTO PATIENTENVERLAUF(PATIENTEN_ID, USERNAME, EINTRAG)
-                VALUES(?, ?, CONCAT(\"<span style='color: red;'>Ausgangszeit verändert:</span><br>\", ?));",
-                [$patientendaten["PATIENTEN_ID"],
-                $_SESSION['USER_ID'],
-                $old_a_timestamp . " => " . $a_timestamp
-              ]);
-            } catch (\Exception $e) {}
-          }
+  // Änderungen in der Ausgangszeit setzen
+  if (array_key_exists("AUSGANG_TIMESTAMP", $postdata)) {
+    // User ist berechtigt die Zeit zu verändern
+    if (($oldDaten["AKTIV"] == 0)
+        && (in_array("PERM_LATE_ENTER_PATIENTS", $_SESSION["PERMISSIONS"], true) ||
+            in_array("PERM_CHANGE_ARCHIVED_PATIENT_DATA", $_SESSION["PERMISSIONS"], true))) {
+      $a_timestamp = trim($postdata["AUSGANG_TIMESTAMP"]);
+      // Eingangszeit darf nicht leer sein
+      if ($a_timestamp != '') {
+        $a_timestamp = date("Y-m-d H:i:s", strtotime($a_timestamp));
+        $old_a_timestamp = date("Y-m-d H:i:s", strtotime($oldDaten["ZEIT_ENTLASSUNG"]));
+        // Eingangszeit weicht von bekannter Zeit ab
+        if ($a_timestamp != $old_a_timestamp) {
+          try {
+            safeExecute($conn, "UPDATE PATIENTEN SET ZEIT_ENTLASSUNG = ? WHERE PATIENTEN_ID = ?;", [$a_timestamp, $patientendaten["PATIENTEN_ID"]]);
+            nachtragAusgangszeit($conn, $patientendaten["PATIENTEN_ID"], $_SESSION['USER_ID'],
+                                 $old_a_timestamp, $a_timestamp);
+          } catch (\Exception $e) {}
         }
-      } else {
-        exit("Error: Berechtigungen für Zeitänderung nicht erteilt oder Patient ist noch aktiv.");
       }
+    } else {
+      exit("Error: Berechtigungen für Zeitänderung nicht erteilt oder Patient ist noch aktiv.");
     }
+  }
 
-
+  $dob = "";
   if ($patientendaten["DOB"] != "") {
     $dob = date("Y-m-d", strtotime($patientendaten["DOB"]));
   }
@@ -112,10 +105,10 @@
 
 
 
+  // Prüfen ob es ein Eintrag bei aktiven Patienten oder ein Nachtrag ist.
+  //    Für Nachträge muss eine zusätzliche Berechtigung vorliegen.
   if ($oldDaten["AKTIV"] != 1) {
-    if (in_array("PERM_LATE_ENTER_PATIENTS", $_SESSION["PERMISSIONS"], true)) {
-      $late_edit = true;
-    } else {
+    if (!in_array("PERM_CHANGE_ARCHIVED_PATIENT_DATA", $_SESSION["PERMISSIONS"], true)) {
       exit("Error: Benutzer ist nicht dazu berechtigt Datensätze nachträglich zu editieren.");
     }
   }
@@ -141,27 +134,15 @@
                 WHERE PATIENTEN_ID = ?;";
 
   try {
-    if ($late_edit) {
-      // Änderungen an archivierten Datensätzen werden zusätzlich im Verlauf vermerkt
-      if (trim(inputDiff($oldDaten, $patientendaten)) != "") {
-        safeExecute($conn, "INSERT INTO PATIENTENVERLAUF(PATIENTEN_ID, USERNAME, EINTRAG)
-                            VALUES(?, ?, CONCAT(\"<span style='color: red;'>Korrektur nach Entlassung:</span><br>\", ?));",
-                            [$patientendaten["PATIENTEN_ID"],
-                            $_SESSION['USER_ID'],
-                            inputDiff($oldDaten, $patientendaten)
-                          ]);
+    $edit_type = ENTRY_TYPE_DATENAENDERUNG;
+    if ($oldDaten["AKTIV"] != 1) {$edit_type = ENTRY_TYPE_NACHTRAG_DATENAENDERUNG;}
+
+    // Änderungen an Datensätzen werden im Verlauf vermerkt
+    if (trim(inputDiff($oldDaten, $patientendaten)) != "") {
+      newEntryPatientenverlauf($conn, $patientendaten["PATIENTEN_ID"], $_SESSION['USER_ID'],
+                               inputDiff($oldDaten, $patientendaten), $edit_type);
       }
-    } else {
-      // Änderung im Verlauf vermerken
-      if (trim(inputDiff($oldDaten, $patientendaten)) != "") {
-        safeExecute($conn, "INSERT INTO PATIENTENVERLAUF(PATIENTEN_ID, USERNAME, EINTRAG)
-                            VALUES(?, ?, CONCAT('Patientendaten wurden bearbeitet:<br>', ?));",
-                            [$patientendaten["PATIENTEN_ID"],
-                             $_SESSION['USER_ID'],
-                             inputDiff($oldDaten, $patientendaten)
-                            ]);
-      }
-    }
+
     // Patientendaten aktualisieren
     safeExecute($conn, $updatesql, $update_data);
 
@@ -176,9 +157,8 @@
       // Patienten auf "Inaktiv" schalten
       safeExecute($conn, "UPDATE PATIENTEN SET Aktiv = 0, ZEIT_ENTLASSUNG = CURRENT_TIMESTAMP WHERE PATIENTEN_ID = ?", [$patientendaten["PATIENTEN_ID"]]);
       // Entlassung im Verlauf vermerken
-      safeExecute($conn, "INSERT INTO PATIENTENVERLAUF(PATIENTEN_ID, USERNAME, EINTRAG)
-                          VALUES(?, ?, ?)",
-                 [$patientendaten["PATIENTEN_ID"], $_SESSION['USER_ID'], "Patient wurden entlassen."]);
+      newEntryPatientenverlauf($conn, $patientendaten["PATIENTEN_ID"], $_SESSION['USER_ID'],
+                               "Patient wurden entlassen.", ENTRY_TYPE_AUSGANG_EIGENSTAENDIG);
     } catch (\Exception $e) {
       echo "Error: Beim Entlassen des Patienten ist ein Fehler aufgetreten. Bitte überprüfen Sie den Datenstand auf der Patientenseite. ".$e;
       exit();
@@ -216,9 +196,9 @@
       // Patienten auf Transportkategorie vermerken
       safeExecute($conn, "UPDATE PATIENTEN SET TRANSPORTKATEGORIE = ? WHERE PATIENTEN_ID = ?", [$postdata["TRANSPORTKATEGORIE"], $patientendaten["PATIENTEN_ID"]]);
       // Anforderung im Verlauf vermerken
-      safeExecute($conn, "INSERT INTO PATIENTENVERLAUF(PATIENTEN_ID, USERNAME, EINTRAG)
-                          VALUES(?, ?, ?)",
-                 [$patientendaten["PATIENTEN_ID"], $_SESSION['USER_ID'], "Transport in der Kategorie ".$postdata["TRANSPORTKATEGORIE"]." angefordert."]);
+      newEntryPatientenverlauf($conn, $patientendaten["PATIENTEN_ID"], $_SESSION['USER_ID'],
+                               "Transport in der Kategorie ".$postdata["TRANSPORTKATEGORIE"]." angefordert.",
+                               ENTRY_TYPE_AUSGANG_TRANSPORT_ANFORDERUNG);
     } catch (\Exception $e) {
       echo "Error: Bei der Transportanforderung des Patienten ist ein Fehler aufgetreten. Bitte überprüfen Sie den Datenstand auf der Patientenseite. ".$e;
       exit();
@@ -243,9 +223,9 @@
         // Rufname des Transportierenden EMS und Zielklinik setzen und auf "Nicht aktiv" setzen
         safeExecute($conn, "UPDATE PATIENTEN SET TRANSPORT_RUFNAME = ?, ZIELKLINIK = ?, Aktiv = 0, ZEIT_ENTLASSUNG = CURRENT_TIMESTAMP WHERE PATIENTEN_ID = ?", [$postdata["TRANSPORT_RUFNAME"], $postdata["TRANSPORT_ZIELKLINIK"], $patientendaten["PATIENTEN_ID"]]);
         // Anforderung im Verlauf vermerken
-        safeExecute($conn, "INSERT INTO PATIENTENVERLAUF(PATIENTEN_ID, USERNAME, EINTRAG)
-        VALUES(?, ?, ?)",
-        [$patientendaten["PATIENTEN_ID"], $_SESSION['USER_ID'], "Patient an Rettungsmittel ".$postdata["TRANSPORT_RUFNAME"]." übergeben.\n". $klinikstring]);
+        newEntryPatientenverlauf($conn, $patientendaten["PATIENTEN_ID"], $_SESSION['USER_ID'],
+                                 "Patient an Rettungsmittel ".$postdata["TRANSPORT_RUFNAME"]." übergeben.\n". $klinikstring,
+                                 ENTRY_TYPE_AUSGANG_TRANSPORT);
       } catch (\Exception $e) {
         echo "Error: Bei der Übergabe an das Rettungsmittel ist ein Fehler aufgetreten. Bitte überprüfen Sie den Datenstand auf der Patientenseite. ".$e;
         exit();

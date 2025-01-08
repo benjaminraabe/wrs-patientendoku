@@ -104,7 +104,7 @@ function update_pat_data(patient_exit=false,
     return res.text()
   }).then(txt => {
     // Check for Server-Side-Errors
-    if (txt.includes("Error")) {
+    if (txt.includes("Error") || txt.includes("Exception")) {
       Metro.toast.create("Bei Speichern ist ein Fehler aufgetreten. (SERVER)", null, null, "alert", {showTop: true});
       console.warn(txt);
       displayLoadingScreen(false);

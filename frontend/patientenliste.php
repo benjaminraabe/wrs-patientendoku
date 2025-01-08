@@ -25,7 +25,7 @@
                                     on pzc.PZC = p.PZC
                                   LEFT JOIN (SELECT PATIENTEN_ID, TIMESTAMP AS ARZTVISITE
                                             FROM PATIENTENVERLAUF v
-                                        		WHERE ART = ".ENTY_TYPE_ARZTVISITE."
+                                        		WHERE ART = ".ENTRY_TYPE_ARZTVISITE."
                                         		GROUP BY PATIENTEN_ID) AS a
                               	    on a.PATIENTEN_ID = p.PATIENTEN_ID
                                   WHERE ((b.UHST_ID = ? OR NULL <=> ?) OR p.BEREICH_ID IS NULL) AND p.Aktiv = 1
